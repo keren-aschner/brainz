@@ -6,6 +6,6 @@ setup(
     author='Keren Solodkin',
     description='Project for advanced system design course.',
     packages=find_packages(),
-    install_requires=[],
+    install_requires=['click', 'flask'],
     tests_require=['pytest', 'pytest-cov'],
 )
