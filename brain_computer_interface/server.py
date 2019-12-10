@@ -8,8 +8,8 @@ from .utils import Listener
 
 
 def run_server(address, data):
-    host, port = address.split(':')
-    listener = Listener(int(port), host)
+    host, port = address
+    listener = Listener(port, host)
     listener.start()
     try:
         while True:
@@ -30,14 +30,14 @@ class Handler(threading.Thread):
 
     def run(self):
         header = self.connection.receive(20)
-        thought_size = struct.unpack('I', header[-4:])
+        thought_size = struct.unpack('I', header[-4:])[0]
         thought = Thought.deserialize(header + self.connection.receive(thought_size))
         self.save_thought(thought)
         self.connection.close()
 
     def save_thought(self, thought):
         timestamp = str(thought.timestamp).replace(' ', '_').replace(':', '-')
-        dir_path = PurePath(self.data_dir, thought.user_id)
+        dir_path = PurePath(self.data_dir, str(thought.user_id))
         file_path = PurePath(dir_path, timestamp + '.txt')
         self.lock.acquire()
         try:

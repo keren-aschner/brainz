@@ -48,9 +48,9 @@ def run_webserver(address, data_dir):
     @app.route('/')
     def get_index_html():
         users_html = [_USER_LINE_HTML.format(user_id=user_dir.name) for user_dir in Path(data_dir).iterdir()]
-        return 200, _INDEX_HTML.format(users='\n'.join(users_html))
+        return _INDEX_HTML.format(users='\n'.join(users_html))
 
-    @app.route('/users/([0-9]+)')
+    @app.route('/users/<string:user_id>')
     def get_user_html(user_id):
         thoughts_html = []
         for thought_file in Path(data_dir, user_id).iterdir():
@@ -58,7 +58,7 @@ def run_webserver(address, data_dir):
             with open(thought_file, 'rb') as f:
                 thought = f.read().decode()
             thoughts_html.append(_USER_THOUGHT_HTML.format(date=date, thought=thought))
-        return 200, _USER_TABLE_HTML.format(user=user_id, thoughts='\n'.join(thoughts_html))
+        return _USER_TABLE_HTML.format(user=user_id, thoughts='\n'.join(thoughts_html))
 
-    host, port = address.split(':')
-    app.run(host=host, port=int(port))
+    host, port = address
+    app.run(host=host, port=port)

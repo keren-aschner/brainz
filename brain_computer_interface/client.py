@@ -5,10 +5,9 @@ from .utils.thought import Thought
 
 
 def upload_thought(address, user, thought):
-    host, port = address.split(':')
-    msg = Thought(int(user), datetime.now(), thought).serialize()
+    msg = Thought(user, datetime.now(), thought).serialize()
 
     with socket.socket() as conn:
-        conn.connect((host, int(port)))
+        conn.connect(address)
         conn.sendall(msg)
     print('done')

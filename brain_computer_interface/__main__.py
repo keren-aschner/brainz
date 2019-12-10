@@ -38,21 +38,24 @@ def main(quiet=False, traceback=False):
 @click.option('--user', help='The use id.')
 @click.option('--thought', help='The thought to upload.')
 def upload_thought(address, user, thought):
-    brain_computer_interface.upload_thought(address, user, thought)
+    host, port = address.split(':')
+    brain_computer_interface.upload_thought((host, int(port)), int(user), thought)
 
 
 @main.command()
 @click.option('--address', help='The address to run the server on.')
 @click.option('--data', help='The data directory')
 def run_server(address, data):
-    brain_computer_interface.run_server(address, data)
+    host, port = address.split(':')
+    brain_computer_interface.run_server((host, int(port)), data)
 
 
 @main.command()
 @click.option('--address', help='The address of the webserver.')
 @click.option('--data-dir', help='The data dir to expose on the website.')
 def run_webserver(address, data_dir):
-    brain_computer_interface.run_webserver(address, data_dir)
+    host, port = address.split(':')
+    brain_computer_interface.run_webserver((host, int(port)), data_dir)
 
 
 if __name__ == '__main__':
