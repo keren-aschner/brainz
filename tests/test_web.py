@@ -7,7 +7,7 @@ import time
 import pytest
 import requests
 
-import web
+from brain_computer_interface import run_webserver
 
 _WEBSERVER_ADDRESS = '127.0.0.1', 8000
 _WEBSERVER_URL = 'http://localhost:8000'
@@ -67,4 +67,4 @@ def test_dynamic(webserver):
 
 def _run_webserver(pipe):
     pipe.send('ready')
-    web.run_webserver(_WEBSERVER_ADDRESS, _DATA_DIR)
+    run_webserver(_WEBSERVER_ADDRESS, _DATA_DIR)
