@@ -7,7 +7,7 @@ import time
 
 import pytest
 
-from ..brain_computer_interface import upload_thought
+from brain_computer_interface import upload_thought
 
 _SERVER_ADDRESS = '127.0.0.1', 5000
 _SERVER_BACKLOG = 1000
