@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from brain_computer_interface.utils import Connection
+from ...brain_computer_interface.utils import Connection
 
 _PORT = 1234
 _DATA = b'Hello, world!'

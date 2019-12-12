@@ -10,7 +10,7 @@ import time
 
 import pytest
 
-from brain_computer_interface import run_server
+from ..brain_computer_interface import run_server
 
 _SERVER_ADDRESS = '127.0.0.1', 5000
 _SERVER_PATH = pathlib.Path(__file__).absolute().parent.parent / 'brain_computer_interface'

@@ -2,7 +2,7 @@ import datetime as dt
 
 import pytest
 
-from brain_computer_interface.utils.thought import Thought
+from ...brain_computer_interface import Thought
 
 user_id = 1
 datetime = dt.datetime(2000, 1, 1, 12, 0)
