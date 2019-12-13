@@ -10,6 +10,9 @@ Welcome to brain-computer-interface's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   api
+   cli
+
 
 
 Indices and tables
