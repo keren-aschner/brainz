@@ -1,5 +1,5 @@
 Brain Computer Interface CLI Reference
-====================
+======================================
 
 The ``brain_computer_interface`` package provides a command-line interface:
 
@@ -44,7 +44,7 @@ To see its version, run:
     brain_computer_interface, version 0.1.0
 
 The ``run-server`` Command
--------------------
+--------------------------
 
 To run the ``run-server`` command:
 
@@ -58,7 +58,7 @@ Options:
   --help          Show this message and exit.
 
 The ``upload-thought`` Command
--------------------
+------------------------------
 
 To run the ``upload-thought`` command:
 
@@ -73,7 +73,7 @@ Options:
   --help          Show this message and exit.
 
 The ``run-webserver`` Command
--------------------
+-----------------------------
 
 To run the ``run-webserver`` command:
 
