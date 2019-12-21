@@ -1,5 +1,5 @@
 from abc import ABC
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
 
 from construct import Struct, Int32ul, Int64ul, PascalString, PaddedString, Float64l, Array, this, Byte, Float32l, \
     StreamError, Adapter
@@ -10,10 +10,8 @@ class ParsingError(Exception):
 
 
 class DateAdapter(Adapter, ABC):
-    UTC2 = timezone(timedelta(hours=2))
-
     def _decode(self, obj, context, path):
-        return datetime.fromtimestamp(obj, self.UTC2)
+        return datetime.utcfromtimestamp(obj)
 
     def _encode(self, obj, context, path):
         return obj.timestamp()
