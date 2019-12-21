@@ -1,4 +1,4 @@
-from parser import parse_user, parse_snapshot, ParsingError
+from .parser import parse_user, parse_snapshot, ParsingError
 
 
 class Reader:
