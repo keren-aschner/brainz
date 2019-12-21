@@ -1,11 +1,13 @@
 import pathlib
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 import pytest
 
 from brain_computer_interface.utils.parser import parse_user, parse_snapshot, ParsingError
 
 RESOURCES = pathlib.Path(__file__).absolute().parent / 'resources'
+
+UTC2 = timezone(timedelta(hours=2))
 
 
 def test_parse_user():
@@ -14,7 +16,7 @@ def test_parse_user():
     f.close()
     assert user.id == 42
     assert user.name == 'Dan Gittik'
-    assert user.birth_date == datetime(1992, 3, 4, 14, 0, 0)
+    assert user.birth_date == datetime(1992, 3, 5, tzinfo=UTC2)
     assert user.gender == 'm'
 
 
@@ -22,7 +24,7 @@ def test_parse_snapshot():
     f = open(RESOURCES / 'snapshot.bin', 'rb')
     snapshot = parse_snapshot(f)
     f.close()
-    assert snapshot.timestamp == datetime(2019, 12, 4, 0, 8, 7, 339000)
+    assert snapshot.timestamp == datetime(2019, 12, 4, 10, 8, 7, 339000, tzinfo=UTC2)
     assert snapshot.translation.x == 0.4873843491077423
     assert snapshot.translation.y == 0.007090016733855009
     assert snapshot.translation.z == -1.1306129693984985
