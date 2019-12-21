@@ -34,25 +34,25 @@ def main(quiet=False, traceback=False):
 
 
 @main.command()
-@click.option('--address', help='The address to upload the thought to.')
-@click.option('--user', help='The use id.')
-@click.option('--thought', help='The thought to upload.')
+@click.option('--address', required=True, help='The address to upload the thought to.')
+@click.option('--user', required=True, help='The use id.')
+@click.option('--thought', required=True, help='The thought to upload.')
 def upload_thought(address, user, thought):
     host, port = address.split(':')
     brain_computer_interface.upload_thought((host, int(port)), int(user), thought)
 
 
 @main.command()
-@click.option('--address', help='The address to run the server on.')
-@click.option('--data', help='The data directory')
+@click.option('--address', required=True, help='The address to run the server on.')
+@click.option('--data', required=True, help='The data directory')
 def run_server(address, data):
     host, port = address.split(':')
     brain_computer_interface.run_server((host, int(port)), data)
 
 
 @main.command()
-@click.option('--address', help='The address of the webserver.')
-@click.option('--data-dir', help='The data dir to expose on the website.')
+@click.option('--address', required=True, help='The address of the webserver.')
+@click.option('--data-dir', required=True, help='The data dir to expose on the website.')
 def run_webserver(address, data_dir):
     host, port = address.split(':')
     brain_computer_interface.run_webserver((host, int(port)), data_dir)
