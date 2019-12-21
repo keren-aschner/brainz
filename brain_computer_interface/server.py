@@ -1,5 +1,4 @@
 import os
-import struct
 import threading
 from pathlib import PurePath
 
@@ -9,15 +8,11 @@ from .utils import Listener
 
 def run_server(address, data):
     host, port = address
-    listener = Listener(port, host)
-    listener.start()
-    try:
+    with Listener(port, host) as listener:
         while True:
             client = listener.accept()
             handler = Handler(client, data)
             handler.start()
-    except KeyboardInterrupt:
-        listener.stop()
 
 
 class Handler(threading.Thread):
@@ -29,9 +24,7 @@ class Handler(threading.Thread):
         self.data_dir = data_dir
 
     def run(self):
-        header = self.connection.receive(20)
-        thought_size = struct.unpack('I', header[-4:])[0]
-        thought = Thought.deserialize(header + self.connection.receive(thought_size))
+        thought = Thought.deserialize(self.connection.receive())
         self.save_thought(thought)
         self.connection.close()
 

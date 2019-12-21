@@ -1,4 +1,5 @@
 import socket
+import struct
 import time
 
 import pytest
@@ -7,6 +8,7 @@ from brain_computer_interface.utils import Connection
 
 _PORT = 1234
 _DATA = b'Hello, world!'
+_CONN_DATA = struct.pack('I', 13) + _DATA
 
 
 @pytest.fixture
@@ -54,7 +56,7 @@ def test_send(server):
         if not chunk:
             break
         chunks.append(chunk)
-    assert b''.join(chunks) == _DATA
+    assert b''.join(chunks) == _CONN_DATA
 
 
 def test_receive(server):
@@ -63,11 +65,9 @@ def test_receive(server):
     connection = Connection(sock)
     try:
         client, _ = server.accept()
-        client.sendall(_DATA)
-        first = connection.receive(1)
-        assert first == _DATA[:1]
-        rest = connection.receive(len(_DATA) - 1)
-        assert rest == _DATA[1:]
+        client.sendall(_CONN_DATA)
+        data = connection.receive()
+        assert data == _DATA
     finally:
         connection.close()
 
@@ -78,9 +78,9 @@ def test_incomplete_data(server):
     connection = Connection(sock)
     try:
         client, _ = server.accept()
-        client.sendall(b'1')
+        client.sendall(struct.pack('I', 2) + b'1')
         client.close()
         with pytest.raises(Exception):
-            connection.receive(2)
+            connection.receive()
     finally:
         connection.close()

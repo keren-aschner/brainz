@@ -2,7 +2,6 @@ import multiprocessing
 import pathlib
 import socket
 import struct
-import subprocess
 import time
 
 import pytest
@@ -14,7 +13,7 @@ _SERVER_BACKLOG = 1000
 _CLI_PATH = pathlib.Path(__file__).absolute().parent.parent / 'brain_computer_interface'
 _COMMAND = 'upload-thought'
 
-_HEADER_FORMAT = 'LLI'
+_HEADER_FORMAT = 'LL'
 _HEADER_SIZE = struct.calcsize(_HEADER_FORMAT)
 
 _USER_1 = 1
@@ -115,10 +114,10 @@ def _run_server(pipe):
 
 def _handle_connection(connection, pipe):
     with connection:
-        header_data = _receive_all(connection, _HEADER_SIZE)
-        user_id, timestamp, size = struct.unpack(_HEADER_FORMAT, header_data)
-        data = _receive_all(connection, size)
-        thought = data.decode()
+        length = struct.unpack('I', _receive_all(connection, 4))[0]
+        data = _receive_all(connection, length)
+        user_id, timestamp = struct.unpack(_HEADER_FORMAT, data[:_HEADER_SIZE])
+        thought = data[_HEADER_SIZE:].decode()
         pipe.send([user_id, timestamp, thought])
 
 

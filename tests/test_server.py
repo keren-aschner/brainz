@@ -1,11 +1,8 @@
 import datetime as dt
 import multiprocessing
 import pathlib
-import signal
 import socket
 import struct
-import subprocess
-import threading
 import time
 
 import pytest
@@ -16,7 +13,7 @@ _SERVER_ADDRESS = '127.0.0.1', 5000
 _SERVER_PATH = pathlib.Path(__file__).absolute().parent.parent / 'brain_computer_interface'
 _COMMAND = 'run-server'
 
-_HEADER_FORMAT = 'LLI'
+_HEADER_FORMAT = 'LL'
 
 _USER_1 = 1
 _USER_2 = 2
@@ -72,6 +69,7 @@ def test_thought(data_dir):
 
 def test_partial_data(data_dir):
     message = _serialize_thought(_USER_1, _TIMESTAMP_1, _THOUGHT_1)
+    message = struct.pack('I', len(message)) + message
     with socket.socket() as connection:
         time.sleep(0.1)  # Wait for server to start listening.
         connection.connect(_SERVER_ADDRESS)
@@ -124,6 +122,7 @@ def _run_server(pipe, data_dir):
 
 def _upload_thought(user_id, timestamp, thought):
     message = _serialize_thought(user_id, timestamp, thought)
+    message = struct.pack('I', len(message)) + message
     with socket.socket() as connection:
         time.sleep(0.1)  # Wait for server to start listening.
         connection.settimeout(2)
@@ -133,7 +132,7 @@ def _upload_thought(user_id, timestamp, thought):
 
 
 def _serialize_thought(user_id, timestamp, thought):
-    header = struct.pack(_HEADER_FORMAT, user_id, timestamp, len(thought))
+    header = struct.pack(_HEADER_FORMAT, user_id, timestamp)
     return header + thought.encode()
 
 

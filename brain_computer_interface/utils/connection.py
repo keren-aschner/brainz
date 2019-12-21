@@ -1,4 +1,5 @@
 import socket
+import struct
 
 
 class Connection:
@@ -11,15 +12,20 @@ class Connection:
         return f'<Connection from {fr[0]}:{fr[1]} to {to[0]}:{to[1]}>'
 
     @classmethod
-    def connect(cls, host, port):
+    def connect(cls, address):
         s = socket.socket()
-        s.connect((host, port))
+        s.connect(address)
         return cls(s)
 
     def send(self, data):
-        self.socket.sendall(data)
+        msg = struct.pack('I', len(data)) + data
+        self.socket.sendall(msg)
 
-    def receive(self, size):
+    def receive(self):
+        size = struct.unpack('I', self._receive_size(4))[0]
+        return self._receive_size(size)
+
+    def _receive_size(self, size):
         data = b''
         while len(data) < size:
             received = self.socket.recv(size - len(data))

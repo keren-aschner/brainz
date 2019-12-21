@@ -20,11 +20,10 @@ class Thought:
                and self.timestamp == other.timestamp and self.thought == other.thought
 
     def serialize(self):
-        return struct.pack('LLI', self.user_id, int(self.timestamp.timestamp()),
-                           len(self.thought)) + self.thought.encode()
+        return struct.pack('LL', self.user_id, int(self.timestamp.timestamp())) + self.thought.encode()
 
     @classmethod
     def deserialize(cls, data):
-        user_id, timestamp, thought_size = struct.unpack('LLI', data[:20])
-        thought = data[20:].decode('utf-8')
+        user_id, timestamp = struct.unpack('LL', data[:16])
+        thought = data[16:].decode('utf-8')
         return Thought(user_id, datetime.fromtimestamp(timestamp), thought)

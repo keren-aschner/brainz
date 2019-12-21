@@ -1,4 +1,5 @@
 import socket
+import struct
 import time
 
 import pytest
@@ -54,8 +55,8 @@ def test_accept(listener):
         sock.connect((_HOST, _PORT))
         connection = listener.accept()
         try:
-            sock.sendall(_DATA)
-            assert connection.receive(len(_DATA)) == _DATA
+            sock.sendall(struct.pack('I', len(_DATA)) + _DATA)
+            assert connection.receive() == _DATA
         finally:
             connection.close()
     finally:
