@@ -13,23 +13,14 @@ class DateAdapter(Adapter, ABC):
     def _decode(self, obj, context, path):
         return datetime.utcfromtimestamp(obj)
 
-    def _encode(self, obj, context, path):
-        return obj.timestamp()
-
 
 class SnapshotTimestampAdapter(Adapter, ABC):
     def _decode(self, obj, context, path):
         return obj / 1000
 
-    def _encode(self, obj, context, path):
-        return obj * 1000
-
 
 class ColorImageAdapter(Adapter, ABC):
     def _decode(self, obj, context, path):
-        return list(map(lambda bgr: bgr[::-1], obj))
-
-    def _encode(self, obj, context, path):
         return list(map(lambda bgr: bgr[::-1], obj))
 
 
