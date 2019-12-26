@@ -2,7 +2,6 @@ import pytest
 
 from brain_computer_interface.thought_layer import Config
 
-fields_num = 5
 fields = ['timestamp', 'translation', 'rotation', 'color_image', 'feelings']
 
 bin_data = b'\x05\x00\x00\x00\t\x00\x00\x00timestamp\x0b\x00\x00\x00translation\x08\x00\x00\x00rotation' \
@@ -11,7 +10,7 @@ bin_data = b'\x05\x00\x00\x00\t\x00\x00\x00timestamp\x0b\x00\x00\x00translation\
 
 @pytest.fixture
 def config():
-    return Config(fields_num, fields)
+    return Config(fields)
 
 
 def test_serialize(config):
