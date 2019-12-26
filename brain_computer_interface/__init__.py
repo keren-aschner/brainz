@@ -1,4 +1,4 @@
-from .client import upload_thought
+from .client import upload_snapshot, upload_sample
 from .server import run_server
 from .utils.thought import Thought
 from .web import run_webserver

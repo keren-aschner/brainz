@@ -34,12 +34,11 @@ def main(quiet=False, traceback=False):
 
 
 @main.command()
-@click.option('--address', required=True, help='The address to upload the thought to.')
-@click.option('--user', required=True, help='The use id.')
-@click.option('--thought', required=True, help='The thought to upload.')
-def upload_thought(address, user, thought):
+@click.option('--address', required=True, help='The address to upload the snapshots to.')
+@click.option('--sample', required=True, help='the sample file path.')
+def upload_sample(address, sample):
     host, port = address.split(':')
-    brain_computer_interface.upload_thought((host, int(port)), int(user), thought)
+    brain_computer_interface.upload_sample((host, int(port)), sample)
 
 
 @main.command()
