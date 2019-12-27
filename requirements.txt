@@ -7,13 +7,13 @@ chardet==3.0.4
 Click==7.0
 codecov==2.0.15
 construct==2.9.45
-coverage==5.0
+coverage==5.0.1
 decorator==4.4.1
 docutils==0.15.2
 entrypoints==0.3
 Flask==1.1.1
 idna==2.8
-imagesize==1.1.0
+imagesize==1.2.0
 itsdangerous==1.1.0
 jedi==0.15.2
 Jinja2==2.10.3
@@ -24,6 +24,7 @@ packaging==19.2
 parso==0.5.2
 pexpect==4.7.0
 pickleshare==0.7.5
+Pillow==6.2.1
 pluggy==0.13.1
 prompt-toolkit==3.0.2
 ptyprocess==0.6.0
@@ -31,8 +32,8 @@ py==1.8.0
 pycodestyle==2.5.0
 pyflakes==2.1.1
 Pygments==2.5.2
-pyparsing==2.4.5
-pytest==5.3.1
+pyparsing==2.4.6
+pytest==5.3.2
 pytest-cov==2.8.1
 pytz==2019.3
 requests==2.22.0
