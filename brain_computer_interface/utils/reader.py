@@ -15,6 +15,6 @@ class Reader:
                 try:
                     s = parse_snapshot(f)
                 except ParsingError:
-                    raise StopIteration
+                    break
                 self.pos = f.tell()
             yield s
