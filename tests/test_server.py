@@ -1,30 +1,40 @@
-import datetime as dt
+import json
 import multiprocessing
 import pathlib
 import socket
 import struct
 import time
+from datetime import datetime
 
 import pytest
 
-from brain_computer_interface import run_server
+from brain_computer_interface.processors.processor import Processor
+from brain_computer_interface.server import run_server, Server
 
 _SERVER_ADDRESS = '127.0.0.1', 5000
-_SERVER_PATH = pathlib.Path(__file__).absolute().parent.parent / 'brain_computer_interface'
-_COMMAND = 'run-server'
 
-_HEADER_FORMAT = 'LL'
+_TIMESTAMP = datetime(2019, 10, 25, 15, 12, 5, 228000)
+_USER_BIN = b'\x01\x00\x00\x00\x00\x00\x00\x00\x0e\x00\x00\x00Keren Solodkin\x80+\x123f'
+_CONFIG = [b'\x02\x00\x00\x00\t\x00\x00\x00timestamp\x0b\x00\x00\x00translation',
+           b'\x02\x00\x00\x00\x0b\x00\x00\x00translation\t\x00\x00\x00timestamp']
 
-_USER_1 = 1
-_USER_2 = 2
-_TIMESTAMP_1 = int(dt.datetime(2019, 10, 25, 15, 12, 5, 228000).timestamp())
-_TIMESTAMP_2 = int(dt.datetime(2019, 10, 25, 15, 15, 2, 304000).timestamp())
-_THOUGHT_1 = "I'm hungry"
-_THOUGHT_2 = "I'm sleepy"
+with open(pathlib.Path(__file__).absolute().parent / 'resources' / 'snapshot.bin', 'rb') as f:
+    _SNAPSHOT_BIN = f.read()
 
 
 @pytest.fixture
 def data_dir(tmp_path):
+    Server.processors = []
+    Server.fields = set()
+
+    @Server.processor('timestamp', 'translation')
+    class TranslationProcessor(Processor):
+        def process(self, snapshot):
+            translation = dict(snapshot.translation)
+            translation.pop('_io', None)
+            with open(self.get_dir(snapshot.timestamp) / 'translation.json', 'w+') as f:
+                json.dump(translation, f)
+
     parent, child = multiprocessing.Pipe()
     process = multiprocessing.Process(target=_run_server, args=(child, tmp_path))
     process.start()
@@ -36,83 +46,12 @@ def data_dir(tmp_path):
         process.join()
 
 
-def test_user_id(data_dir):
-    _upload_thought(_USER_1, _TIMESTAMP_1, _THOUGHT_1)
-    user_dir = data_dir / str(_USER_1)
-    assert user_dir.exists()
-    assert user_dir.is_dir()
-    _upload_thought(_USER_2, _TIMESTAMP_1, _THOUGHT_1)
-    user_dir = data_dir / str(_USER_2)
-    assert user_dir.exists()
-    assert user_dir.is_dir()
+def test_server(data_dir):
+    config = _handle_connection(_USER_BIN, _SNAPSHOT_BIN)
+    assert config in _CONFIG
+    translation = _get_paths(data_dir, _TIMESTAMP)
 
-
-def test_timestamp(data_dir):
-    thought_path = _get_path(data_dir, _USER_1, _TIMESTAMP_1)
-    assert not thought_path.exists()
-    _upload_thought(_USER_1, _TIMESTAMP_1, _THOUGHT_1)
-    assert thought_path.exists()
-    thought_path = _get_path(data_dir, _USER_1, _TIMESTAMP_2)
-    assert not thought_path.exists()
-    _upload_thought(_USER_1, _TIMESTAMP_2, _THOUGHT_1)
-    assert thought_path.exists()
-
-
-def test_thought(data_dir):
-    _upload_thought(_USER_1, _TIMESTAMP_1, _THOUGHT_1)
-    thought_path = _get_path(data_dir, _USER_1, _TIMESTAMP_1)
-    assert thought_path.read_text() == _THOUGHT_1
-    _upload_thought(_USER_2, _TIMESTAMP_2, _THOUGHT_2)
-    thought_path = _get_path(data_dir, _USER_2, _TIMESTAMP_2)
-    assert thought_path.read_text() == _THOUGHT_2
-
-
-def test_partial_data(data_dir):
-    message = _serialize_thought(_USER_1, _TIMESTAMP_1, _THOUGHT_1)
-    message = struct.pack('I', len(message)) + message
-    with socket.socket() as connection:
-        time.sleep(0.1)  # Wait for server to start listening.
-        connection.connect(_SERVER_ADDRESS)
-        for c in message:
-            connection.sendall(bytes([c]))
-            time.sleep(0.01)
-    thought_path = _get_path(data_dir, _USER_1, _TIMESTAMP_1)
-    assert thought_path.read_text() == _THOUGHT_1
-
-
-def test_race_condition(data_dir):
-    timestamp = _TIMESTAMP_1
-    for _ in range(10):
-        timestamp += 1
-        _upload_thought(_USER_1, timestamp, _THOUGHT_1)
-        _upload_thought(_USER_1, timestamp, _THOUGHT_2)
-        thought_path = _get_path(data_dir, _USER_1, timestamp)
-        thoughts = set(thought_path.read_text().splitlines())
-        assert thoughts == {_THOUGHT_1, _THOUGHT_2}
-
-
-# TODO
-# def test_cli(tmp_path):
-#     host, port = _SERVER_ADDRESS
-#     process = subprocess.Popen(
-#         ['python', _SERVER_PATH, _COMMAND, f'--address {host}:{port}', f'--data {str(tmp_path)}'],
-#         stdout=subprocess.PIPE,
-#     )
-#
-#     def run_server():
-#         process.communicate()
-#
-#     thread = threading.Thread(target=run_server)
-#     thread.start()
-#     time.sleep(0.1)
-#     _upload_thought(_USER_1, _TIMESTAMP_1, _THOUGHT_1)
-#     _upload_thought(_USER_2, _TIMESTAMP_2, _THOUGHT_2)
-#     process.send_signal(signal.SIGINT)
-#     thread.join()
-#     thought_path_1 = _get_path(tmp_path, _USER_1, _TIMESTAMP_1)
-#     thought_path_2 = _get_path(tmp_path, _USER_2, _TIMESTAMP_2)
-#     assert thought_path_1.read_text() == _THOUGHT_1
-#     assert thought_path_2.read_text() == _THOUGHT_2
+    assert translation.read_text() == '{"x": 0.487, "y": 0.009, "z": -1.13}'
 
 
 def _run_server(pipe, data_dir):
@@ -120,22 +59,34 @@ def _run_server(pipe, data_dir):
     run_server(_SERVER_ADDRESS, data_dir)
 
 
-def _upload_thought(user_id, timestamp, thought):
-    message = _serialize_thought(user_id, timestamp, thought)
-    message = struct.pack('I', len(message)) + message
+def _handle_connection(user_bin, snapshot_bin):
     with socket.socket() as connection:
         time.sleep(0.1)  # Wait for server to start listening.
         connection.settimeout(2)
         connection.connect(_SERVER_ADDRESS)
-        connection.sendall(message)
-    time.sleep(0.2)  # Wait for server to write thought.
+
+        hello = struct.pack('I', len(user_bin)) + user_bin
+        connection.sendall(hello)
+        length = struct.unpack('I', _receive_all(connection, 4))[0]
+        config = _receive_all(connection, length)
+        snapshot = struct.pack('I', len(snapshot_bin)) + snapshot_bin
+        connection.sendall(snapshot)
+
+    time.sleep(0.1)  # Wait for server to process
+    return config
 
 
-def _serialize_thought(user_id, timestamp, thought):
-    header = struct.pack(_HEADER_FORMAT, user_id, timestamp)
-    return header + thought.encode()
+def _receive_all(connection, size):
+    chunks = []
+    while size > 0:
+        chunk = connection.recv(size)
+        if not chunk:
+            raise RuntimeError('incomplete data')
+        chunks.append(chunk)
+        size -= len(chunk)
+    return b''.join(chunks)
 
 
-def _get_path(data_dir, user_id, timestamp):
-    datetime = dt.datetime.fromtimestamp(timestamp)
-    return data_dir / f'{user_id}/{datetime:%Y-%m-%d_%H-%M-%S}.txt'
+def _get_paths(data_dir, timestamp):
+    directory = data_dir / f'1/{timestamp:%Y-%m-%d_%H-%M-%S-%f}'
+    return directory / 'translation.json'

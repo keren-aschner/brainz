@@ -14,6 +14,14 @@ class TimestampAdapter(Adapter, ABC):
         return int(obj.replace(tzinfo=timezone.utc).timestamp() * 1000)
 
 
+class ColorImageAdapter(Adapter, ABC):
+    def _decode(self, obj, context, path):
+        return list(map(lambda bgr: tuple(bgr), obj))
+
+    def _encode(self, obj, context, path):
+        return list(map(lambda bgr: list(bgr), obj))
+
+
 class Snapshot(ProtocolMessage):
     snapshot_timestamp = TimestampAdapter(Int64ul)
     translation = Struct(x=Float64l, y=Float64l, z=Float64l)
