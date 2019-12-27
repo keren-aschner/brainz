@@ -26,16 +26,19 @@ class Snapshot(ProtocolMessage):
     snapshot_timestamp = TimestampAdapter(Int64ul)
     translation = Struct(x=Float64l, y=Float64l, z=Float64l)
     rotation = Struct(x=Float64l, y=Float64l, z=Float64l, w=Float64l)
-    color_image = Struct(height=Int32ul, width=Int32ul, image=Array(this.height * this.width, Byte[3]))
+    color_image = Struct(height=Int32ul, width=Int32ul,
+                         image=ColorImageAdapter(Array(this.height * this.width, Byte[3])))
     depth_image = Struct(height=Int32ul, width=Int32ul, image=Array(this.height * this.width, Float32l))
     feelings = Struct(hunger=Float32l, thirst=Float32l, exhaustion=Float32l, happiness=Float32l)
 
     protocol = Struct(timestamp=snapshot_timestamp, translation=translation, rotation=rotation, color_image=color_image,
                       depth_image=depth_image, feelings=feelings)
 
-    def __init__(self, timestamp=0, translation=None, rotation=None, color_image=None, depth_image=None, feelings=None,
-                 **kwargs):
+    def __init__(self, timestamp=None, translation=None, rotation=None, color_image=None, depth_image=None,
+                 feelings=None, **kwargs):
 
+        if timestamp is None:
+            timestamp = datetime.fromtimestamp(0)
         if translation is None:
             translation = Container(x=0, y=0, z=0)
         if rotation is None:
@@ -46,6 +49,7 @@ class Snapshot(ProtocolMessage):
             depth_image = Container(height=0, width=0, image=[])
         if feelings is None:
             feelings = Container(hunger=0, thirst=0, exhaustion=0, happiness=0)
+
         self.timestamp = timestamp
         self.translation = translation
         self.rotation = rotation
