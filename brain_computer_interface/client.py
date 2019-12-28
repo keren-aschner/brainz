@@ -1,11 +1,21 @@
+import logging
+
 from .thought_layer import Hello, Config, Snapshot
 from .utils import Connection, Reader
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%d-%m-%y %H:%M:%S')
+
+logger = logging.getLogger(__name__)
 
 
 def upload_sample(address, path):
     reader = Reader(path)
+    logger.info('Initialized reader, starting uploading snapshots.')
     for snapshot in reader:
         upload_snapshot(address, reader.user, snapshot)
+    logger.info('Uploaded all snapshots')
 
 
 def upload_snapshot(address, user, snapshot):
@@ -15,7 +25,7 @@ def upload_snapshot(address, user, snapshot):
         snapshot = create_snapshot_message(config, snapshot)
         connection.send(snapshot.serialize())
 
-    print('done')
+    logger.info('Uploaded snapshot')
 
 
 def create_snapshot_message(config, snapshot):
