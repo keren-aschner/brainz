@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from construct import Container
 
-from brain_computer_interface.processors.translation_processor import TranslationProcessor
+from brain_computer_interface.server.processors.translation_processor import TranslationProcessor
 from brain_computer_interface.thought_layer import Hello, Snapshot
 
 _USER = Hello(id=1, name='Keren Solodkin', birth_date=datetime(1997, 2, 25), gender='f')

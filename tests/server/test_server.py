@@ -8,8 +8,8 @@ from datetime import datetime
 
 import pytest
 
-from brain_computer_interface.processors.processor import Processor
-from brain_computer_interface.server import run_server, Server
+from brain_computer_interface.server.processors.processor import Processor
+from brain_computer_interface.server.server import run_server, Server
 
 _SERVER_ADDRESS = '127.0.0.1', 5000
 
@@ -18,7 +18,7 @@ _USER_BIN = b'\x01\x00\x00\x00\x00\x00\x00\x00\x0e\x00\x00\x00Keren Solodkin\x80
 _CONFIG = [b'\x02\x00\x00\x00\t\x00\x00\x00timestamp\x0b\x00\x00\x00translation',
            b'\x02\x00\x00\x00\x0b\x00\x00\x00translation\t\x00\x00\x00timestamp']
 
-with open(pathlib.Path(__file__).absolute().parent / 'resources' / 'snapshot.bin', 'rb') as f:
+with open(pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'server' / 'snapshot.bin', 'rb') as f:
     _SNAPSHOT_BIN = f.read()
 
 

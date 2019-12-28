@@ -13,7 +13,7 @@ color_image = Container(height=10, width=20, image=[(1, 2, 3) for _ in range(10 
 depth_image = Container(height=12, width=14, image=[0.0 for _ in range(12 * 14)])
 feelings = Container(hunger=0, thirst=0, exhaustion=0, happiness=0)
 
-with open(pathlib.Path(__file__).absolute().parent / 'resources' / 'snapshot.bin', 'rb') as f:
+with open(pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'thought_layer' / 'snapshot.bin', 'rb') as f:
     bin_data = f.read()
 
 

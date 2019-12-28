@@ -5,7 +5,7 @@ import traceback
 import click
 
 import brain_computer_interface
-from .processors import color_image_processor, translation_processor
+from .server.processors import color_image_processor, translation_processor
 
 
 class Log:

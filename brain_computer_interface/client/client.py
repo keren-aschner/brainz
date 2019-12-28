@@ -1,7 +1,8 @@
 import logging
 
-from .thought_layer import Hello, Config, Snapshot
-from .utils import Connection, Reader
+from .reader import Reader
+from ..thought_layer import Hello, Config, Snapshot
+from ..utils import Connection
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',

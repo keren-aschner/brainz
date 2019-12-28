@@ -1,8 +1,8 @@
 import logging
 import threading
 
-from .thought_layer import Hello, Config, Snapshot
-from .utils import Listener
+from ..thought_layer import Hello, Config, Snapshot
+from ..utils import Listener
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',

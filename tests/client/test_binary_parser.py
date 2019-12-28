@@ -3,9 +3,9 @@ from datetime import datetime
 
 import pytest
 
-from brain_computer_interface.utils.parser import parse_user, parse_snapshot, ParsingError
+from brain_computer_interface.client.binary_parser import parse_user, parse_snapshot, ParsingError
 
-RESOURCES = pathlib.Path(__file__).absolute().parent / 'resources'
+RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'client'
 
 
 def test_parse_user():

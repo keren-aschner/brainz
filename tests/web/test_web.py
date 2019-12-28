@@ -11,7 +11,7 @@ from brain_computer_interface import run_webserver
 
 _WEBSERVER_ADDRESS = '127.0.0.1', 8000
 _WEBSERVER_URL = 'http://localhost:8000'
-_DATA_DIR = pathlib.Path(__file__).absolute().parent / 'resources' / 'data'
+_DATA_DIR = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'web' / 'data'
 
 
 @pytest.fixture
