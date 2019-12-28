@@ -3,14 +3,19 @@ from datetime import datetime
 
 import pytest
 
-from brain_computer_interface.client.binary_parser import parse_user, parse_snapshot, ParsingError
+from brain_computer_interface.client.mind.binary_parser import BinaryParser, ParsingError
 
-RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'client'
+RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'client' / 'mind'
 
 
-def test_parse_user():
+@pytest.fixture
+def parser():
+    return BinaryParser()
+
+
+def test_parse_user(parser):
     f = open(RESOURCES / 'user.bin', 'rb')
-    user = parse_user(f)
+    user = parser.parse_user(f)
     f.close()
     assert user.id == 42
     assert user.name == 'Dan Gittik'
@@ -18,9 +23,9 @@ def test_parse_user():
     assert user.gender == 'm'
 
 
-def test_parse_snapshot():
+def test_parse_snapshot(parser):
     f = open(RESOURCES / 'snapshot.bin', 'rb')
-    snapshot = parse_snapshot(f)
+    snapshot = parser.parse_snapshot(f)
     f.close()
     assert snapshot.timestamp == datetime(2019, 12, 4, 8, 8, 7, 339000)
     assert snapshot.translation.x == 0.4873843491077423
@@ -44,8 +49,8 @@ def test_parse_snapshot():
     assert snapshot.depth_image.image[0] == 0.0
 
 
-def test_not_enough_data():
+def test_not_enough_data(parser):
     f = open(RESOURCES / 'user.bin', 'rb')
     with pytest.raises(ParsingError):
-        parse_snapshot(f)
+        parser.parse_snapshot(f)
     f.close()

@@ -1,11 +1,13 @@
-from .binary_parser import parse_user, parse_snapshot, ParsingError
+from .mind.binary_parser import BinaryParser
+from .mind.parser import ParsingError
 
 
 class Reader:
     def __init__(self, file_path):
+        self.parser = BinaryParser()
         self.file_path = file_path
         with open(file_path, 'rb') as f:
-            self.user = parse_user(f)
+            self.user = self.parser.parse_user(f)
             self.pos = f.tell()
 
     def __iter__(self):
@@ -13,7 +15,7 @@ class Reader:
             with open(self.file_path, 'rb') as f:
                 f.seek(self.pos)
                 try:
-                    s = parse_snapshot(f)
+                    s = self.parser.parse_snapshot(f)
                 except ParsingError:
                     break
                 self.pos = f.tell()
