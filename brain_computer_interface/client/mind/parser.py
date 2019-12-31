@@ -8,3 +8,7 @@ class Parser:
 
     def parse_snapshot(self, stream):
         raise NotImplementedError
+
+    @classmethod
+    def open(cls, *args, **kwargs):
+        return open(*args, **kwargs)
