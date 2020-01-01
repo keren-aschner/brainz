@@ -12,9 +12,11 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 api = Api(app)
 
-COLOR_IMAGE = 'colorImage'
 TIMESTAMP = 'timestamp'
 POSE = 'pose'
+COLOR_IMAGE = 'color_image'
+DEPTH_IMAGE = 'depth_image'
+FEELINGS = 'feelings'
 
 
 class Config(Resource):

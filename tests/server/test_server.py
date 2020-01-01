@@ -13,8 +13,8 @@ _SERVER_ADDRESS = '127.0.0.1', 5000
 
 _CONFIG = {TIMESTAMP, POSE}
 
-_USER = {'userId': 1, 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
-         'gender': 'f'}
+_USER = {'user_id': 1, 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
+         'gender': 'FEMALE'}
 _TIMESTAMP = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
 _SNAPSHOT = {'timestamp': _TIMESTAMP.timestamp() * 1000,
              'pose': {'translation': {'x': 0.487, 'y': 0.009, 'z': -1.13}}}

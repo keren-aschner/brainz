@@ -10,13 +10,13 @@ class ProtobufParser(Parser):
     def parse_user(self, stream):
         user = User()
         user.ParseFromString(self._read(stream))
-        return MessageToDict(user, including_default_value_fields=True)
+        return MessageToDict(user, including_default_value_fields=True, preserving_proto_field_name=True)
 
     def parse_snapshot(self, stream):
         try:
             snapshot = Snapshot()
             snapshot.ParseFromString(self._read(stream))
-            return MessageToDict(snapshot, including_default_value_fields=True)
+            return MessageToDict(snapshot, including_default_value_fields=True, preserving_proto_field_name=True)
         except Exception as e:
             raise ParsingError(e)
 

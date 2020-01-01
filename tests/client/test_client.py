@@ -10,12 +10,12 @@ RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'cli
 PROTO_SAMPLE = RESOURCES / 'sample.mind.gz'
 with open(RESOURCES / 'snapshot.json', 'r') as f:
     _SNAPSHOT = json.load(f)
-_USER = {'userId': '42', 'username': 'Dan Gittik', 'birthday': 699746400, 'gender': 'MALE'}
+_USER = {'user_id': '42', 'username': 'Dan Gittik', 'birthday': 699746400, 'gender': 'MALE'}
 
 _SERVER_ADDRESS = '127.0.0.1', 5000
 _ADDRESS = f'{_SERVER_ADDRESS[0]}:{_SERVER_ADDRESS[1]}'
 
-_CONFIG = ['timestamp', 'pose', 'colorImage', 'depthImage', 'feelings']
+_CONFIG = ['timestamp', 'pose', 'color_image', 'depth_image', 'feelings']
 
 
 @pytest.fixture

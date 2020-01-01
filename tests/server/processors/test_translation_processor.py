@@ -4,7 +4,7 @@ import pytest
 
 from brain_computer_interface.server.processors.translation_processor import TranslationProcessor
 
-_USER = {'userId': 1, 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
+_USER = {'user_id': 1, 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          'gender': 'f'}
 _TIMESTAMP_1 = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
 _SNAPSHOT_1 = {'timestamp': _TIMESTAMP_1.timestamp() * 1000,
@@ -36,4 +36,4 @@ def test_processor(translation_processor):
 
 
 def _get_path(data_dir, user, timestamp):
-    return data_dir / str(user['userId']) / f'{timestamp:%Y-%m-%d_%H-%M-%S-%f}/translation.json'
+    return data_dir / str(user['user_id']) / f'{timestamp:%Y-%m-%d_%H-%M-%S-%f}/translation.json'
