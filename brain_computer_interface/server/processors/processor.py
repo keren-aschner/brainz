@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from datetime import datetime
 
 
 class Processor:
@@ -11,6 +12,7 @@ class Processor:
         raise NotImplementedError
 
     def get_dir(self, timestamp):
-        dir_path = self.directory / str(self.user.id) / f'{timestamp:%Y-%m-%d_%H-%M-%S-%f}'
+        dir_path = self.directory / str(
+            self.user['userId']) / f'{datetime.utcfromtimestamp(int(timestamp) / 1000):%Y-%m-%d_%H-%M-%S-%f}'
         os.makedirs(dir_path, exist_ok=True)
         return dir_path

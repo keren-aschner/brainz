@@ -2,19 +2,23 @@ import gzip
 import struct
 
 from .mind_pb2 import User, Snapshot
-from .parser import Parser
+from .parser import Parser, ParsingError
+from google.protobuf.json_format import MessageToDict
 
 
 class ProtobufParser(Parser):
     def parse_user(self, stream):
         user = User()
         user.ParseFromString(self._read(stream))
-        return user
+        return MessageToDict(user, including_default_value_fields=True)
 
     def parse_snapshot(self, stream):
-        snapshot = Snapshot()
-        snapshot.ParseFromString(self._read(stream))
-        return snapshot
+        try:
+            snapshot = Snapshot()
+            snapshot.ParseFromString(self._read(stream))
+            return MessageToDict(snapshot, including_default_value_fields=True)
+        except Exception as e:
+            raise ParsingError(e)
 
     @classmethod
     def open(cls, *args, **kwargs):

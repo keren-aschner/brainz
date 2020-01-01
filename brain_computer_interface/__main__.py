@@ -38,8 +38,7 @@ def main(quiet=False, traceback=False):
 @click.option('--address', required=True, help='The address to upload the snapshots to.')
 @click.option('--sample', required=True, help='the sample file path.')
 def upload_sample(address, sample):
-    host, port = address.split(':')
-    brain_computer_interface.upload_sample((host, int(port)), sample)
+    brain_computer_interface.upload_sample(address, sample)
 
 
 @main.command()

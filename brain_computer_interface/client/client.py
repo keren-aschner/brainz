@@ -1,10 +1,10 @@
 import logging
 
-from .reader import Reader
-from ..thought_layer import Hello, Config, Snapshot
-from ..utils import Connection
+import requests
 
-logging.basicConfig(level=logging.INFO,
+from .reader import Reader
+
+logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%d-%m-%y %H:%M:%S')
 
@@ -16,21 +16,12 @@ def upload_sample(address, path):
     logger.info('Initialized reader, starting uploading snapshots.')
     for snapshot in reader:
         upload_snapshot(address, reader.user, snapshot)
-    logger.info('Uploaded all snapshots')
+    logger.info('Uploaded all snapshots.')
 
 
 def upload_snapshot(address, user, snapshot):
-    with Connection.connect(address) as connection:
-        connection.send(Hello(**user).serialize())
-        config = Config.deserialize(connection.receive())
-        snapshot = create_snapshot_message(config, snapshot)
-        connection.send(snapshot.serialize())
-
-    logger.info('Uploaded snapshot')
-
-
-def create_snapshot_message(config, snapshot):
-    fields_data = {}
-    for field in config.fields:
-        fields_data[field] = snapshot[field]
-    return Snapshot(**fields_data)
+    config = requests.get(f'http://{address}/config').json()['config']
+    logger.debug('Got config.')
+    snapshot = {field: snapshot[field] for field in config}
+    requests.post(f'http://{address}/snapshot', json={'user': user, 'snapshot': snapshot})
+    logger.info('Uploaded snapshot.')
