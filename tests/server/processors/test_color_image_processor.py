@@ -10,7 +10,7 @@ _USER = {'user_id': 1, 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 2
          'gender': 'f'}
 _TIMESTAMP_1 = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
 
-with open(RESOURCES / 'color_image', 'rb+') as f:
+with open(RESOURCES / 'color_image.data', 'rb+') as f:
     image = f.read()
 _SNAPSHOT_1 = {'timestamp': _TIMESTAMP_1.timestamp() * 1000,
                'color_image': dict(height=1080, width=1920, data=image)}

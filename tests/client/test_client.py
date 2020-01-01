@@ -31,8 +31,8 @@ def data_dir(tmp_path):
         process.join()
 
 
-def test_proto_sample(data_dir):
-    upload_sample(_ADDRESS, PROTO_SAMPLE)
+def _test_proto_sample(data_dir):
+    upload_sample(_ADDRESS, PROTO_SAMPLE, True)
     with open(data_dir / 'user.json', 'r') as f:
         user = json.load(f)
     with open(data_dir / 'snapshot.json', 'r') as f:

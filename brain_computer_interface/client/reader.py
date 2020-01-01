@@ -10,7 +10,7 @@ def _get_parser(protobuf):
 
 
 class Reader:
-    def __init__(self, file_path, protobuf=True):
+    def __init__(self, file_path, protobuf):
         self.parser = _get_parser(protobuf)
         self.file_path = file_path
         with self.parser.open(file_path, 'rb') as f:

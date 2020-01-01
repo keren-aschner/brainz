@@ -11,8 +11,8 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 
 
-def upload_sample(address, path):
-    reader = Reader(path)
+def upload_sample(address, path, protobuf=True):
+    reader = Reader(path, protobuf)
     logger.info('Initialized reader, starting uploading snapshots.')
     for snapshot in reader:
         upload_snapshot(address, reader.user, snapshot)
