@@ -20,20 +20,9 @@ FEELINGS = 'feelings'
 
 
 class Config(Resource):
-    fields = set()
-
     def get(self):
         logger.info('Sending config specification.')
-        return {'config': list(self.fields)}
-
-    @classmethod
-    def processor(cls, *fields):
-        def decorator(cl):
-            cls.fields.update(fields)
-            Server.processors.append(cl)
-            return cl
-
-        return decorator
+        return {'config': list(Server.fields)}
 
 
 class Snapshot(Resource):
@@ -58,6 +47,7 @@ def run_server(address, data):
 
 
 class Server:
+    fields = set()
     processors = []
     data_dir = ''
 
@@ -66,3 +56,12 @@ class Server:
         for processor in cls.processors:
             processor(cls.data_dir, user).process(snapshot)
         logger.info('Processed snapshot.')
+
+    @classmethod
+    def processor(cls, *fields):
+        def decorator(cl):
+            cls.fields.update(fields)
+            cls.processors.append(cl)
+            return cl
+
+        return decorator

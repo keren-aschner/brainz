@@ -22,10 +22,10 @@ _SNAPSHOT = {'timestamp': _TIMESTAMP.timestamp() * 1000,
 
 @pytest.fixture
 def data_dir(tmp_path):
+    Server.fields = set()
     Server.processors = []
-    Config.fields = set()
 
-    @Config.processor(TIMESTAMP, POSE)
+    @Server.processor(TIMESTAMP, POSE)
     class TranslationProcessor(Processor):
         def process(self, snapshot):
             translation = snapshot[POSE]['translation']

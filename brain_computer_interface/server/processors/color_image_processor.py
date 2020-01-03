@@ -1,12 +1,12 @@
 from PIL import Image
 
 from .processor import Processor
-from ..server import Config, TIMESTAMP, COLOR_IMAGE
+from ..server import Server, TIMESTAMP, COLOR_IMAGE
 
 import base64
 
 
-@Config.processor(TIMESTAMP, COLOR_IMAGE)
+@Server.processor(TIMESTAMP, COLOR_IMAGE)
 class ColorImageProcessor(Processor):
     def process(self, snapshot):
         color_image = snapshot[COLOR_IMAGE]

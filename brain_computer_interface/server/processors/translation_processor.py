@@ -1,10 +1,10 @@
 import json
 
 from .processor import Processor
-from ..server import Config, TIMESTAMP, POSE
+from ..server import Server, TIMESTAMP, POSE
 
 
-@Config.processor(TIMESTAMP, POSE)
+@Server.processor(TIMESTAMP, POSE)
 class TranslationProcessor(Processor):
     def process(self, snapshot):
         translation = snapshot[POSE]['translation']
