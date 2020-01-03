@@ -9,7 +9,7 @@ from .parser import Parser, ParsingError
 
 class BinaryParser(Parser):
     def parse_user(self, stream):
-        user = Struct(user_id=Int64ul, username=PascalString(Int32ul, 'utf-8'), birthday=Int32ul,
+        user = Struct(user_id=StrAdapter(Int64ul), username=PascalString(Int32ul, 'utf-8'), birthday=Int32ul,
                       gender=Enum(PaddedString(1, 'utf-8'), MALE='m', FEMALE='f', OTHER='o'))
         return container_to_dict(user.parse_stream(stream))
 
@@ -21,7 +21,7 @@ class BinaryParser(Parser):
                              data=ColorImageAdapter(Array(this.height * this.width, Byte[3])))
         depth_image = Struct(height=Int32ul, width=Int32ul, data=Array(this.height * this.width, Float32l))
         feelings = Struct(hunger=Float32l, thirst=Float32l, exhaustion=Float32l, happiness=Float32l)
-        snapshot = Struct(timestamp=Int64ul, pose=pose, color_image=color_image, depth_image=depth_image,
+        snapshot = Struct(timestamp=StrAdapter(Int64ul), pose=pose, color_image=color_image, depth_image=depth_image,
                           feelings=feelings)
 
         try:
@@ -33,6 +33,11 @@ class BinaryParser(Parser):
 class ColorImageAdapter(Adapter, ABC):
     def _decode(self, obj, context, path):
         return base64.b64encode(b''.join(map(lambda bgr: bytes(bgr[::-1]), obj))).decode()
+
+
+class StrAdapter(Adapter, ABC):
+    def _decode(self, obj, context, path):
+        return str(obj)
 
 
 def container_to_dict(container):
