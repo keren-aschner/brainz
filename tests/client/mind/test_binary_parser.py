@@ -23,7 +23,7 @@ def test_parse_user(parser):
     f = open(RESOURCES / 'user.bin', 'rb')
     user = parser.parse_user(f)
     f.close()
-    assert user['user_id'] == 42
+    assert user['user_id'] == '42'
     assert user['username'] == 'Dan Gittik'
     assert user['birthday'] == datetime(1992, 3, 4, 22, tzinfo=timezone.utc).timestamp()
     assert user['gender'] == 'MALE'
@@ -33,7 +33,7 @@ def test_parse_snapshot(parser):
     f = open(RESOURCES / 'snapshot.bin', 'rb')
     snapshot = parser.parse_snapshot(f)
     f.close()
-    assert snapshot['timestamp'] == datetime(2019, 12, 4, 8, 8, 7, 339000, tzinfo=timezone.utc).timestamp() * 1000
+    assert snapshot['timestamp'] == '1575446887339'
     pose = snapshot['pose']
     translation = pose['translation']
     assert translation['x'] == 0.4873843491077423
