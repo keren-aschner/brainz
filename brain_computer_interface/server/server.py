@@ -1,4 +1,8 @@
+import inspect
 import logging
+import os
+from datetime import datetime
+from pathlib import Path
 
 from flask import Flask, request
 from flask_restful import Resource, Api
@@ -53,15 +57,33 @@ class Server:
 
     @classmethod
     def process(cls, user, snapshot):
-        for processor in cls.processors:
-            processor(cls.data_dir, user).process(snapshot)
+        context = Context(cls.data_dir, user)
+        for process in cls.processors:
+            process(context, snapshot)
         logger.info('Processed snapshot.')
 
     @classmethod
     def processor(cls, *fields):
-        def decorator(cl):
-            cls.fields.update(fields)
-            cls.processors.append(cl)
-            return cl
+        cls.fields.update(fields)
+
+        def decorator(f):
+            if inspect.isclass(f):
+                obj = f()
+                cls.processors.append(obj.process)
+            else:
+                cls.processors.append(f)
+            return f
 
         return decorator
+
+
+class Context:
+    def __init__(self, directory, user):
+        self.directory = Path(directory)
+        self.user = user
+
+    def path(self, timestamp, filename):
+        dir_path = self.directory / self.user['user_id'] \
+                   / f'{datetime.utcfromtimestamp(int(timestamp) / 1000):%Y-%m-%d_%H-%M-%S-%f}'
+        os.makedirs(dir_path, exist_ok=True)
+        return dir_path / filename

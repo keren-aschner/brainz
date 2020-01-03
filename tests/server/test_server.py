@@ -6,14 +6,13 @@ from datetime import datetime, timezone
 import pytest
 import requests
 
-from brain_computer_interface.server.processors.processor import Processor
-from brain_computer_interface.server.server import run_server, Server, Config, TIMESTAMP, POSE
+from brain_computer_interface.server.server import run_server, Server, TIMESTAMP, POSE
 
 _SERVER_ADDRESS = '127.0.0.1', 5000
 
 _CONFIG = {TIMESTAMP, POSE}
 
-_USER = {'user_id': 1, 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
+_USER = {'user_id': '1', 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          'gender': 'FEMALE'}
 _TIMESTAMP = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
 _SNAPSHOT = {'timestamp': _TIMESTAMP.timestamp() * 1000,
@@ -26,11 +25,11 @@ def data_dir(tmp_path):
     Server.processors = []
 
     @Server.processor(TIMESTAMP, POSE)
-    class TranslationProcessor(Processor):
-        def process(self, snapshot):
-            translation = snapshot[POSE]['translation']
-            with open(self.get_dir(snapshot[TIMESTAMP]) / 'translation.json', 'w+') as f:
-                json.dump(translation, f)
+    def process(context, snapshot):
+        path = context.path(snapshot[TIMESTAMP], 'translation.json')
+        translation = snapshot[POSE]['translation']
+        with open(path, 'w+') as f:
+            json.dump(translation, f)
 
     parent, child = multiprocessing.Pipe()
     process = multiprocessing.Process(target=_run_server, args=(child, tmp_path))

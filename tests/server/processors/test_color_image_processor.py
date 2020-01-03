@@ -3,10 +3,11 @@ from datetime import datetime, timezone
 
 import pytest
 
-from brain_computer_interface.server.processors.color_image_processor import ColorImageProcessor
+from brain_computer_interface.server.processors.color_image_processor import process
+from brain_computer_interface.server.server import Context
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'server' / 'processors'
-_USER = {'user_id': 1, 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
+_USER = {'user_id': '1', 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          'gender': 'f'}
 _TIMESTAMP_1 = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
 
@@ -19,18 +20,18 @@ with open(RESOURCES / 'color_image.jpg', 'rb') as f:
 
 
 @pytest.fixture
-def color_image_processor(tmp_path):
-    return ColorImageProcessor(tmp_path, _USER)
+def context(tmp_path):
+    return Context(tmp_path, _USER)
 
 
-def test_processor(color_image_processor):
-    data_dir = color_image_processor.directory
+def test_processor(context):
+    data_dir = context.directory
 
     translation_path = _get_path(data_dir, _USER, _TIMESTAMP_1)
     assert not translation_path.exists()
-    color_image_processor.process(_SNAPSHOT_1)
+    process(context, _SNAPSHOT_1)
     assert translation_path.read_bytes() == _DATA_1
 
 
 def _get_path(data_dir, user, timestamp):
-    return data_dir / str(user['user_id']) / f'{timestamp:%Y-%m-%d_%H-%M-%S-%f}/color_image.jpg'
+    return data_dir / user['user_id'] / f'{timestamp:%Y-%m-%d_%H-%M-%S-%f}/color_image.jpg'
