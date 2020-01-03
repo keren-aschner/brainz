@@ -1,11 +1,10 @@
 import inspect
 import logging
-import os
-from datetime import datetime
-from pathlib import Path
 
 from flask import Flask, request
 from flask_restful import Resource, Api
+
+from .context import Context
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
@@ -75,15 +74,3 @@ class Server:
             return f
 
         return decorator
-
-
-class Context:
-    def __init__(self, directory, user):
-        self.directory = Path(directory)
-        self.user = user
-
-    def path(self, timestamp, filename):
-        dir_path = self.directory / self.user['user_id'] \
-                   / f'{datetime.utcfromtimestamp(int(timestamp) / 1000):%Y-%m-%d_%H-%M-%S-%f}'
-        os.makedirs(dir_path, exist_ok=True)
-        return dir_path / filename
