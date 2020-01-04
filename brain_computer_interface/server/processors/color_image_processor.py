@@ -11,7 +11,7 @@ def process_color_image(context, snapshot):
     data = base64.b64decode(color_image['data'])
     data = [(data[i], data[i + 1], data[i + 2]) for i in range(0, len(data), 3)]
     image.putdata(data)
-    path = context.path(snapshot[context.TIMESTAMP], 'color_image.jpg')
+    path = context.path('color_image.jpg')
     image.save(path)
 
 

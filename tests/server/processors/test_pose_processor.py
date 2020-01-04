@@ -16,7 +16,7 @@ _DATA = '{"translation": {"x": 0.487, "y": 0.009, "z": -1.13}, "rotation": {"x":
 
 @pytest.fixture
 def context(tmp_path):
-    return Context(tmp_path, _USER)
+    return Context(tmp_path, _USER, _SNAPSHOT)
 
 
 def test_processor(context):

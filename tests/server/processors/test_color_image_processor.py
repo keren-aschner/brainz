@@ -21,7 +21,7 @@ with open(RESOURCES / 'color_image.jpg', 'rb') as f:
 
 @pytest.fixture
 def context(tmp_path):
-    return Context(tmp_path, _USER)
+    return Context(tmp_path, _USER, _SNAPSHOT_1)
 
 
 def test_processor(context):

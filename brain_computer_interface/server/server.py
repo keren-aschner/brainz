@@ -52,7 +52,7 @@ class Server:
 
     @classmethod
     def process(cls, user, snapshot):
-        context = Context(cls.data_dir, user)
+        context = Context(cls.data_dir, user, snapshot)
         for process in cls.processors:
             try:
                 process(context, snapshot)
