@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from brain_computer_interface.server.processors.color_image_processor import process
+from brain_computer_interface.server.processors.color_image_processor import process_color_image
 from brain_computer_interface.server.server import Context
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'server' / 'processors'
@@ -29,7 +29,7 @@ def test_processor(context):
 
     translation_path = _get_path(data_dir, _USER, _TIMESTAMP_1)
     assert not translation_path.exists()
-    process(context, _SNAPSHOT_1)
+    process_color_image(context, _SNAPSHOT_1)
     assert translation_path.read_bytes() == _DATA_1
 
 

@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from brain_computer_interface.server.processors.translation_processor import process
+from brain_computer_interface.server.processors.translation_processor import process_translation
 from brain_computer_interface.server.server import Context
 
 _USER = {'user_id': '1', 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
@@ -27,12 +27,12 @@ def test_processor(context):
 
     translation_path = _get_path(data_dir, _USER, _TIMESTAMP_1)
     assert not translation_path.exists()
-    process(context, _SNAPSHOT_1)
+    process_translation(context, _SNAPSHOT_1)
     assert translation_path.read_text() == _DATA_1
 
     translation_path = _get_path(data_dir, _USER, _TIMESTAMP_2)
     assert not translation_path.exists()
-    process(context, _SNAPSHOT_2)
+    process_translation(context, _SNAPSHOT_2)
     assert translation_path.read_text() == _DATA_2
 
 

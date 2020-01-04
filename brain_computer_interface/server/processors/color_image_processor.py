@@ -2,11 +2,10 @@ import base64
 
 from PIL import Image
 
-from ..server import Server, TIMESTAMP, COLOR_IMAGE
+from ..server import TIMESTAMP, COLOR_IMAGE
 
 
-@Server.processor(TIMESTAMP, COLOR_IMAGE)
-def process(context, snapshot):
+def process_color_image(context, snapshot):
     color_image = snapshot[COLOR_IMAGE]
     image = Image.new('RGB', (color_image['width'], color_image['height']))
     data = base64.b64decode(color_image['data'])
@@ -14,3 +13,6 @@ def process(context, snapshot):
     image.putdata(data)
     path = context.path(snapshot[TIMESTAMP], 'color_image.jpg')
     image.save(path)
+
+
+process_color_image.fields = [TIMESTAMP, COLOR_IMAGE]

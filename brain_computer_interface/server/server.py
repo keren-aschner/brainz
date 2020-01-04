@@ -14,9 +14,6 @@ logging.basicConfig(level=logging.DEBUG,
 
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
-api = Api(app)
-
 TIMESTAMP = 'timestamp'
 POSE = 'pose'
 COLOR_IMAGE = 'color_image'
@@ -41,13 +38,15 @@ class Snapshot(Resource):
         return {}, 201
 
 
-api.add_resource(Config, '/config')
-api.add_resource(Snapshot, '/snapshot')
-
-
 def run_server(address, data):
     Server.data_dir = data
     Server.load_modules('brain_computer_interface/server/processors')
+
+    app = Flask(__name__)
+    api = Api(app)
+    api.add_resource(Config, '/config')
+    api.add_resource(Snapshot, '/snapshot')
+
     host, port = address
     app.run(host=host, port=port)
 
@@ -65,25 +64,29 @@ class Server:
         logger.info('Processed snapshot.')
 
     @classmethod
-    def processor(cls, *fields):
-        cls.fields.update(fields)
-
-        def decorator(f):
-            if inspect.isclass(f):
-                obj = f()
-                cls.processors.append(obj.process)
-            else:
-                cls.processors.append(f)
-            return f
-
-        return decorator
-
-    @classmethod
     def load_modules(cls, root):
         root = Path(root).absolute()
         for path in root.iterdir():
             if path.name.startswith('_') or not path.suffix == '.py':
                 continue
             logger.debug(f'importing brain_computer_interface.server.{root.name}.{path.stem}')
-            importlib.import_module(f'.server.{root.name}.{path.stem}', package='brain_computer_interface')
+            module = importlib.import_module(f'.server.{root.name}.{path.stem}', package='brain_computer_interface')
+            cls.add_processors(module)
         logger.info('done loading modules')
+
+    @classmethod
+    def add_processors(cls, module):
+        for name, processor in inspect.getmembers(module, is_processor):
+            cls.fields.update(processor.fields)
+            if inspect.isclass(processor):
+                cls.processors.append(processor().process)
+            else:
+                cls.processors.append(processor)
+
+
+def is_processor(object):
+    if inspect.isclass(object):
+        return 'process' in object.__dict__ and 'fields' in object.__dict__
+    if inspect.isfunction(object):
+        return object.__name__.startswith('process') and 'fields' in object.__dict__
+    return False

@@ -1,13 +1,15 @@
-import json
 import multiprocessing
+import os
+import pathlib
 import time
 from datetime import datetime, timezone
 
 import pytest
 import requests
 
-from brain_computer_interface.server.server import run_server, Server, TIMESTAMP, POSE
+from brain_computer_interface.server.server import run_server, TIMESTAMP, POSE, Server
 
+RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'server'
 _SERVER_ADDRESS = '127.0.0.1', 5000
 
 _CONFIG = {TIMESTAMP, POSE}
@@ -23,14 +25,7 @@ _SNAPSHOT = {'timestamp': _TIMESTAMP.timestamp() * 1000,
 def data_dir(tmp_path):
     Server.fields = set()
     Server.processors = []
-
-    @Server.processor(TIMESTAMP, POSE)
-    def process(context, snapshot):
-        path = context.path(snapshot[TIMESTAMP], 'translation.json')
-        translation = snapshot[POSE]['translation']
-        with open(path, 'w+') as f:
-            json.dump(translation, f)
-
+    cwd = os.getcwd()
     parent, child = multiprocessing.Pipe()
     process = multiprocessing.Process(target=_run_server, args=(child, tmp_path))
     process.start()
@@ -38,6 +33,7 @@ def data_dir(tmp_path):
     try:
         yield tmp_path
     finally:
+        os.chdir(cwd)
         process.terminate()
         process.join()
 
@@ -58,6 +54,7 @@ def test_snapshot(data_dir):
 
 
 def _run_server(pipe, data_dir):
+    os.chdir(RESOURCES)
     pipe.send('ready')
     run_server(_SERVER_ADDRESS, data_dir)
 
