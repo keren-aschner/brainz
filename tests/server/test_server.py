@@ -18,7 +18,8 @@ _USER = {'user_id': '1', 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2,
          'gender': 'FEMALE'}
 _TIMESTAMP = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
 _SNAPSHOT = {'timestamp': _TIMESTAMP.timestamp() * 1000,
-             'pose': {'translation': {'x': 0.487, 'y': 0.009, 'z': -1.13}}}
+             'pose': {'translation': {'x': 0.487, 'y': 0.009, 'z': -1.13},
+                      'rotation': {'x': 0.487, 'y': 0.009, 'z': -1.13, 'w': 2.5}}}
 
 
 @pytest.fixture
@@ -49,8 +50,8 @@ def test_snapshot(data_dir):
     host, port = _SERVER_ADDRESS
     time.sleep(1)
     requests.post(f'http://{host}:{port}/snapshot', json={'user': _USER, 'snapshot': _SNAPSHOT})
-    translation = _get_paths(data_dir, _TIMESTAMP)
-    assert translation.read_text() == '{"x": 0.487, "y": 0.009, "z": -1.13}'
+    pose = _get_paths(data_dir, _TIMESTAMP)
+    assert pose.read_text() == '{"translation": {"x": 0.487, "y": 0.009, "z": -1.13}, "rotation": {"x": 0.487, "y": 0.009, "z": -1.13, "w": 2.5}}'
 
 
 def _run_server(pipe, data_dir):
@@ -61,4 +62,4 @@ def _run_server(pipe, data_dir):
 
 def _get_paths(data_dir, timestamp):
     directory = data_dir / f'1/{timestamp:%Y-%m-%d_%H-%M-%S-%f}'
-    return directory / 'translation.json'
+    return directory / 'pose.json'
