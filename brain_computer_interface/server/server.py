@@ -14,12 +14,6 @@ logging.basicConfig(level=logging.DEBUG,
 
 logger = logging.getLogger(__name__)
 
-TIMESTAMP = 'timestamp'
-POSE = 'pose'
-COLOR_IMAGE = 'color_image'
-DEPTH_IMAGE = 'depth_image'
-FEELINGS = 'feelings'
-
 
 class Config(Resource):
     def get(self):

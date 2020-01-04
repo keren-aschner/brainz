@@ -7,12 +7,12 @@ from datetime import datetime, timezone
 import pytest
 import requests
 
-from brain_computer_interface.server.server import run_server, TIMESTAMP, POSE, Server
+from brain_computer_interface.server.server import run_server, Server
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'server'
 _SERVER_ADDRESS = '127.0.0.1', 5000
 
-_CONFIG = {TIMESTAMP, POSE}
+_CONFIG = {'timestamp', 'pose'}
 
 _USER = {'user_id': '1', 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          'gender': 'FEMALE'}

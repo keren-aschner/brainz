@@ -4,6 +4,12 @@ from pathlib import Path
 
 
 class Context:
+    TIMESTAMP = 'timestamp'
+    POSE = 'pose'
+    COLOR_IMAGE = 'color_image'
+    DEPTH_IMAGE = 'depth_image'
+    FEELINGS = 'feelings'
+
     def __init__(self, directory, user):
         self.directory = Path(directory)
         self.user = user
