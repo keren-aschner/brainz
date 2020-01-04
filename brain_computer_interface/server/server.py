@@ -54,7 +54,10 @@ class Server:
     def process(cls, user, snapshot):
         context = Context(cls.data_dir, user)
         for process in cls.processors:
-            process(context, snapshot)
+            try:
+                process(context, snapshot)
+            except Exception:
+                logger.exception(f'Exception on processor {process.__name__}')
         logger.info('Processed snapshot.')
 
     @classmethod
@@ -71,6 +74,7 @@ class Server:
     @classmethod
     def add_processors(cls, module):
         for name, processor in inspect.getmembers(module, is_processor):
+            logger.debug(f'adding processor "{name}"')
             cls.fields.update(processor.fields)
             if inspect.isclass(processor):
                 cls.processors.append(processor().process)
@@ -80,7 +84,7 @@ class Server:
 
 def is_processor(object):
     if inspect.isclass(object):
-        return 'process' in object.__dict__ and 'fields' in object.__dict__
+        return object.__name__.endswith('Processor') and 'process' in object.__dict__ and 'fields' in object.__dict__
     if inspect.isfunction(object):
         return object.__name__.startswith('process') and 'fields' in object.__dict__
     return False
