@@ -11,4 +11,4 @@ def process_depth_image(context, snapshot):
     pyplot.imsave(path, data)
 
 
-process_depth_image.fields = [Context.TIMESTAMP, Context.DEPTH_IMAGE]
+process_depth_image.field = Context.DEPTH_IMAGE

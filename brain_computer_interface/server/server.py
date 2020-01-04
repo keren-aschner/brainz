@@ -46,7 +46,7 @@ def run_server(address, data):
 
 
 class Server:
-    fields = set()
+    fields = {Context.TIMESTAMP}
     processors = []
     data_dir = ''
 
@@ -75,7 +75,10 @@ class Server:
     def add_processors(cls, module):
         for name, processor in inspect.getmembers(module, is_processor):
             logger.debug(f'adding processor "{name}"')
-            cls.fields.update(processor.fields)
+            if hasattr(object, 'fields'):
+                cls.fields.update(processor.fields)
+            else:
+                cls.fields.add(processor.field)
             if inspect.isclass(processor):
                 cls.processors.append(processor().process)
             else:
@@ -84,7 +87,11 @@ class Server:
 
 def is_processor(object):
     if inspect.isclass(object):
-        return object.__name__.endswith('Processor') and 'process' in object.__dict__ and 'fields' in object.__dict__
+        return object.__name__.endswith('Processor') and hasattr(object, 'process') and has_fields(object)
     if inspect.isfunction(object):
-        return object.__name__.startswith('process') and 'fields' in object.__dict__
+        return object.__name__.startswith('process') and has_fields(object)
     return False
+
+
+def has_fields(object):
+    return hasattr(object, 'field') or hasattr(object, 'fields')

@@ -15,4 +15,4 @@ def process_color_image(context, snapshot):
     image.save(path)
 
 
-process_color_image.fields = [Context.TIMESTAMP, Context.COLOR_IMAGE]
+process_color_image.field = Context.COLOR_IMAGE

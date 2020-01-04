@@ -24,7 +24,7 @@ _SNAPSHOT = {'timestamp': _TIMESTAMP.timestamp() * 1000,
 
 @pytest.fixture
 def data_dir(tmp_path):
-    Server.fields = set()
+    Server.fields = {'timestamp'}
     Server.processors = []
     cwd = os.getcwd()
     parent, child = multiprocessing.Pipe()
