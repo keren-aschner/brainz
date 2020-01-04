@@ -5,7 +5,6 @@ import traceback
 import click
 
 import brain_computer_interface
-from .server.processors import color_image_processor, translation_processor
 
 
 # TODO use configurations
