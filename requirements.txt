@@ -10,9 +10,11 @@ Click==7.0
 codecov==2.0.15
 construct==2.9.45
 coverage==5.0.1
+cycler==0.10.0
 decorator==4.4.1
 docutils==0.15.2
 entrypoints==0.3
+fields==5.0.0
 Flask==1.1.1
 Flask-RESTful==0.3.7
 idna==2.8
@@ -20,9 +22,12 @@ imagesize==1.2.0
 itsdangerous==1.1.0
 jedi==0.15.2
 Jinja2==2.10.3
+kiwisolver==1.1.0
 MarkupSafe==1.1.1
+matplotlib==3.1.2
 mccabe==0.6.1
 more-itertools==8.0.2
+numpy==1.18.0
 packaging==19.2
 parso==0.5.2
 pexpect==4.7.0
@@ -47,5 +52,5 @@ snowballstemmer==2.0.0
 soupsieve==1.9.5
 traitlets==4.3.3
 urllib3==1.25.7
-wcwidth==0.1.7
+wcwidth==0.1.8
 Werkzeug==0.16.0
