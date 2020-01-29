@@ -11,6 +11,8 @@ logging.basicConfig(level=logging.DEBUG,
 logger = logging.getLogger(__name__)
 
 
+# TODO: handle errors
+
 def upload_sample(host, port, path, protobuf=True):
     reader = Reader(path, protobuf)
     logger.info('Initialized reader, starting uploading snapshots.')
@@ -24,4 +26,4 @@ def upload_snapshot(host, port, user, snapshot):
     logger.debug('Got config.')
     snapshot = {field: snapshot[field] for field in config}
     requests.post(f'http://{host}:{port}/snapshot', json={'user': user, 'snapshot': snapshot})
-    logger.info('Uploaded snapshot.')
+    logger.debug('Uploaded snapshot.')
