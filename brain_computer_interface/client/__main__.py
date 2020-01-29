@@ -14,7 +14,7 @@ def cli():
 @click.option('-p', '--port', default=8000, help='The port of the host to upload the snapshots to.')
 @click.argument('sample')
 @click.option('--binary', is_flag=True, help='Use binary sample.')
-def upload_sample(host, port, sample, binary):
+def upload(host, port, sample, binary):
     """
     Upload the given sample to the server on `host`:`port`.
     """
