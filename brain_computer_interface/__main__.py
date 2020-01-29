@@ -37,14 +37,6 @@ def main(quiet=False, traceback=False):
 
 
 @main.command()
-@click.option('--address', required=True, help='The address to upload the snapshots to.')
-@click.option('--sample', required=True, help='the sample file path.')
-@click.option('--binary', is_flag=True, help='Use binary sample.')
-def upload_sample(address, sample, binary):
-    brain_computer_interface.upload_sample(address, sample, not binary)
-
-
-@main.command()
 @click.option('--address', required=True, help='The address to run the server on.')
 @click.option('--data', required=True, help='The data directory')
 def run_server(address, data):
