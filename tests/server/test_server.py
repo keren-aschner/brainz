@@ -10,7 +10,8 @@ import requests
 from brain_computer_interface.server.server import run_server, Server
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'server'
-_SERVER_ADDRESS = '127.0.0.1', 5000
+_SERVER_HOST = '127.0.0.1'
+_SERVER_PORT = 5000
 
 _CONFIG = {'timestamp', 'pose'}
 
@@ -40,16 +41,14 @@ def data_dir(tmp_path):
 
 
 def test_config(data_dir):
-    host, port = _SERVER_ADDRESS
     time.sleep(1)
-    config = requests.get(f'http://{host}:{port}/config').json()['config']
+    config = requests.get(f'http://{_SERVER_HOST}:{_SERVER_PORT}/config').json()['config']
     assert set(config) == _CONFIG
 
 
 def test_snapshot(data_dir):
-    host, port = _SERVER_ADDRESS
     time.sleep(1)
-    requests.post(f'http://{host}:{port}/snapshot', json={'user': _USER, 'snapshot': _SNAPSHOT})
+    requests.post(f'http://{_SERVER_HOST}:{_SERVER_PORT}/snapshot', json={'user': _USER, 'snapshot': _SNAPSHOT})
     pose = _get_paths(data_dir, _TIMESTAMP)
     assert pose.read_text() == '{"translation": {"x": 0.487, "y": 0.009, "z": -1.13}, "rotation": {"x": 0.487, "y": 0.009, "z": -1.13, "w": 2.5}}'
 
@@ -57,7 +56,7 @@ def test_snapshot(data_dir):
 def _run_server(pipe, data_dir):
     os.chdir(RESOURCES)
     pipe.send('ready')
-    run_server(_SERVER_ADDRESS, data_dir)
+    run_server(_SERVER_HOST, _SERVER_PORT, data_dir)
 
 
 def _get_paths(data_dir, timestamp):

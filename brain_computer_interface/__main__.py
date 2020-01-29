@@ -37,14 +37,6 @@ def main(quiet=False, traceback=False):
 
 
 @main.command()
-@click.option('--address', required=True, help='The address to run the server on.')
-@click.option('--data', required=True, help='The data directory')
-def run_server(address, data):
-    host, port = address.split(':')
-    brain_computer_interface.run_server((host, int(port)), data)
-
-
-@main.command()
 @click.option('--address', required=True, help='The address of the webserver.')
 @click.option('--data-dir', required=True, help='The data dir to expose on the website.')
 def run_webserver(address, data_dir):

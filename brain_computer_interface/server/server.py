@@ -32,7 +32,7 @@ class Snapshot(Resource):
         return {}, 201
 
 
-def run_server(address, data):
+def run_server(host, port, data):
     Server.data_dir = data
     Server.load_modules('brain_computer_interface/server/processors')
 
@@ -41,7 +41,6 @@ def run_server(address, data):
     api.add_resource(Config, '/config')
     api.add_resource(Snapshot, '/snapshot')
 
-    host, port = address
     app.run(host=host, port=port)
 
 

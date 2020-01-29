@@ -3,7 +3,7 @@ import click
 from . import upload_sample, version
 
 
-@click.group('client')
+@click.group()
 @click.version_option(version)
 def cli():
     pass
