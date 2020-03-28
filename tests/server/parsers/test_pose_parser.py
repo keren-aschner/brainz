@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from brain_computer_interface.server.processors.pose_processor import process_pose
+from brain_computer_interface.server.parsers.pose_parser import parse_pose
 from brain_computer_interface.server.server import Context
 
 _USER = {'user_id': '1', 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
@@ -19,12 +19,12 @@ def context(tmp_path):
     return Context(tmp_path, _USER, _SNAPSHOT)
 
 
-def test_processor(context):
+def test_parser(context):
     data_dir = context.directory
 
     translation_path = _get_path(data_dir, _USER, _TIMESTAMP)
     assert not translation_path.exists()
-    process_pose(context, _SNAPSHOT)
+    parse_pose(context, _SNAPSHOT)
     assert translation_path.read_text() == _DATA
 
 

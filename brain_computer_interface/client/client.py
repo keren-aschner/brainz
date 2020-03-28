@@ -4,6 +4,7 @@ from typing import Union, List
 import requests
 
 from .reader import Reader
+from ..protocol.client_server import serialize
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
@@ -42,8 +43,7 @@ def upload_snapshot(host: str, port: Union[str, int], user: dict, snapshot: dict
     """
     try:
         snapshot = {field: snapshot[field] for field in config}
-        # TODO: not use json
-        requests.post(f'http://{host}:{port}/snapshot', json={'user': user, 'snapshot': snapshot})
+        requests.post(f'http://{host}:{port}/snapshot', json={'message': serialize(user, snapshot)})
         logger.debug('Uploaded snapshot')
     except Exception:
         logger.exception("Error during uploading snapshot")

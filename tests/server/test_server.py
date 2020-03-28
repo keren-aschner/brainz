@@ -1,3 +1,4 @@
+import json
 import multiprocessing
 import os
 import pathlib
@@ -25,8 +26,6 @@ _SNAPSHOT = {'timestamp': _TIMESTAMP.timestamp() * 1000,
 
 @pytest.fixture
 def data_dir(tmp_path):
-    Server.fields = {'timestamp'}
-    Server.processors = []
     cwd = os.getcwd()
     parent, child = multiprocessing.Pipe()
     process = multiprocessing.Process(target=_run_server, args=(child, tmp_path))
@@ -41,22 +40,32 @@ def data_dir(tmp_path):
 
 
 def test_config(data_dir):
-    time.sleep(1)
+    time.sleep(0.5)
     config = requests.get(f'http://{_SERVER_HOST}:{_SERVER_PORT}/config').json()['config']
     assert set(config) == _CONFIG
 
 
 def test_snapshot(data_dir):
-    time.sleep(1)
-    requests.post(f'http://{_SERVER_HOST}:{_SERVER_PORT}/snapshot', json={'user': _USER, 'snapshot': _SNAPSHOT})
-    pose = _get_paths(data_dir, _TIMESTAMP)
-    assert pose.read_text() == '{"translation": {"x": 0.487, "y": 0.009, "z": -1.13}, "rotation": {"x": 0.487, "y": 0.009, "z": -1.13, "w": 2.5}}'
+    time.sleep(0.5)
+    response = requests.post(f'http://{_SERVER_HOST}:{_SERVER_PORT}/snapshot',
+                             json={'message': json.dumps({'user': _USER, 'snapshot': _SNAPSHOT})})
+    assert response.status_code == 201
+    f = data_dir / 'file'
+    assert f.read_text() == 'publish called'
+
+
+def publish(path):
+    def publish_message(message):
+        with open(path / 'file', 'w') as f:
+            f.write('publish called')
+
+    return publish_message
 
 
 def _run_server(pipe, data_dir):
     os.chdir(RESOURCES)
     pipe.send('ready')
-    run_server(_SERVER_HOST, _SERVER_PORT, data_dir)
+    run_server(_SERVER_HOST, _SERVER_PORT, publish(data_dir))
 
 
 def _get_paths(data_dir, timestamp):

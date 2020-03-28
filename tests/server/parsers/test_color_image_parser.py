@@ -3,10 +3,10 @@ from datetime import datetime, timezone
 
 import pytest
 
-from brain_computer_interface.server.processors.color_image_processor import process_color_image
+from brain_computer_interface.server.parsers.color_image_parser import parse_color_image
 from brain_computer_interface.server.server import Context
 
-RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'server' / 'processors'
+RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'server' / 'parsers'
 _USER = {'user_id': '1', 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          'gender': 'f'}
 _TIMESTAMP_1 = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
@@ -24,12 +24,12 @@ def context(tmp_path):
     return Context(tmp_path, _USER, _SNAPSHOT_1)
 
 
-def test_processor(context):
+def test_parser(context):
     data_dir = context.directory
 
     translation_path = _get_path(data_dir, _USER, _TIMESTAMP_1)
     assert not translation_path.exists()
-    process_color_image(context, _SNAPSHOT_1)
+    parse_color_image(context, _SNAPSHOT_1)
     assert translation_path.read_bytes() == _DATA_1
 
 

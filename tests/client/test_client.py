@@ -23,7 +23,7 @@ def test_proto_sample(requests_mock):
 
     upload_sample(_SERVER_HOST, _SERVER_PORT, PROTO_SAMPLE, True)
 
-    data = json.loads(requests_mock.last_request.text)
+    data = json.loads(json.loads(requests_mock.last_request.text)['message'])
     assert data['user'] == _USER
     assert data['snapshot'] == _SNAPSHOT
 
@@ -33,6 +33,6 @@ def test_bin_sample(requests_mock):
     requests_mock.post(f'http://{_SERVER_ADDRESS}/snapshot')
 
     upload_sample(_SERVER_HOST, _SERVER_PORT, BIN_SAMPLE, False)
-    data = json.loads(requests_mock.last_request.text)
+    data = json.loads(json.loads(requests_mock.last_request.text)['message'])
     assert data['user'] == _USER
     assert data['snapshot'] == _SNAPSHOT

@@ -5,7 +5,7 @@ from PIL import Image
 from ..context import Context
 
 
-def process_color_image(context, snapshot):
+def parse_color_image(context, snapshot):
     color_image = snapshot[context.COLOR_IMAGE]
     image = Image.new('RGB', (color_image['width'], color_image['height']))
     data = base64.b64decode(color_image['data'])
@@ -15,4 +15,4 @@ def process_color_image(context, snapshot):
     image.save(path)
 
 
-process_color_image.field = Context.COLOR_IMAGE
+parse_color_image.field = Context.COLOR_IMAGE
