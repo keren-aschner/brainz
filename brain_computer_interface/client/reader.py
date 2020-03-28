@@ -1,16 +1,28 @@
-from .mind.binary_parser import BinaryParser
-from .mind.parser import ParsingError
-from .mind.protobuf_parser import ProtobufParser
+from .mind import Parser, BinaryParser, ProtobufParser, ParsingError
 
 
-def _get_parser(protobuf):
+def _get_parser(protobuf: bool) -> Parser:
+    """
+    :param protobuf: Whether to return the protobuf parser.
+    :return: The relevant parser according to `protobuf`.
+    """
     if protobuf:
         return ProtobufParser()
     return BinaryParser()
 
 
 class Reader:
-    def __init__(self, file_path, protobuf):
+    """
+    A reader used to extracting user information and snapshots from sample files.
+    """
+
+    def __init__(self, file_path: str, protobuf: bool) -> None:
+        """
+        Parse the user from the given sample and initiate the data members of the class.
+
+        :param file_path: The path to the sample file.
+        :param protobuf: Whether to use a protobuf or binary format.
+        """
         self.parser = _get_parser(protobuf)
         self.file_path = file_path
         with self.parser.open(file_path, 'rb') as f:
@@ -18,6 +30,9 @@ class Reader:
             self.pos = f.tell()
 
     def __iter__(self):
+        """
+        Iterate over and parse the snapshots in the sample file.
+        """
         while True:
             with self.parser.open(self.file_path, 'rb') as f:
                 f.seek(self.pos)

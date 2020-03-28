@@ -1,7 +1,7 @@
 import json
 import pathlib
 
-from brain_computer_interface import upload_sample
+from brain_computer_interface.client import upload_sample
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'client'
 PROTO_SAMPLE = RESOURCES / 'sample.mind.gz'

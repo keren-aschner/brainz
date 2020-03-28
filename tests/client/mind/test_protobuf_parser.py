@@ -20,9 +20,9 @@ def parser():
 
 
 def test_parse_user(parser):
-    f = open(RESOURCES / 'user.proto', 'rb')
-    user = parser.parse_user(f)
-    f.close()
+    user_file = open(RESOURCES / 'user.proto', 'rb')
+    user = parser.parse_user(user_file)
+    user_file.close()
     assert user['user_id'] == '42'
     assert user['username'] == 'Dan Gittik'
     assert user['birthday'] == datetime(1992, 3, 4, 22, tzinfo=timezone.utc).timestamp()
@@ -30,9 +30,9 @@ def test_parse_user(parser):
 
 
 def test_parse_snapshot(parser):
-    f = open(RESOURCES / 'snapshot.proto', 'rb')
-    snapshot = parser.parse_snapshot(f)
-    f.close()
+    snapshot_file = open(RESOURCES / 'snapshot.proto', 'rb')
+    snapshot = parser.parse_snapshot(snapshot_file)
+    snapshot_file.close()
     assert snapshot['timestamp'] == '1575446887339'
     pose = snapshot['pose']
     translation = pose['translation']
@@ -60,7 +60,7 @@ def test_parse_snapshot(parser):
 
 
 def test_not_enough_data(parser):
-    f = open(RESOURCES / 'user.proto', 'rb')
+    user_file = open(RESOURCES / 'user.proto', 'rb')
     with pytest.raises(ParsingError):
-        parser.parse_snapshot(f)
-    f.close()
+        parser.parse_snapshot(user_file)
+    user_file.close()
