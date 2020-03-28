@@ -3,10 +3,10 @@ from datetime import datetime, timezone
 
 import pytest
 import json
-from brain_computer_interface.server.parsers.depth_image_parser import parse_depth_image
+from brain_computer_interface.parsers.depth_image_parser import parse_depth_image
 from brain_computer_interface.server.server import Context
 
-RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'server' / 'parsers'
+RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'parsers'
 _USER = {'user_id': '1', 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          'gender': 'f'}
 _TIMESTAMP = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)

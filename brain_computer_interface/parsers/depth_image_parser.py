@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot
 
-from ..context import Context
+from .context import Context
 
 
 def parse_depth_image(context, snapshot):

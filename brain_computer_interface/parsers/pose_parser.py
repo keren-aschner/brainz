@@ -1,6 +1,6 @@
 import json
 
-from ..context import Context
+from .context import Context
 
 
 def parse_pose(context, snapshot):

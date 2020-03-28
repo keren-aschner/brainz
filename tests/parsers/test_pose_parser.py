@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from brain_computer_interface.server.parsers.pose_parser import parse_pose
+from brain_computer_interface.parsers.pose_parser import parse_pose
 from brain_computer_interface.server.server import Context
 
 _USER = {'user_id': '1', 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),

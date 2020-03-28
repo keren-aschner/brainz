@@ -7,7 +7,7 @@ from typing import Callable, List, Dict, Any
 from flask import Flask, request
 from flask_restful import Resource, Api
 
-from .context import Context
+from ..parsers.context import Context
 from ..protocol.client_server import deserialize
 from ..protocol.server_parsers import serialize
 
@@ -26,7 +26,7 @@ def run_server(host: str, port: int, publish: Callable[[str], None]) -> None:
     :param port: The server's port.
     :param publish: The publish method to use.
     """
-    Server.load_modules('brain_computer_interface/server/parsers')
+    Server.load_modules('brain_computer_interface/parsers')
     app = get_app(publish)
     app.run(host=host, port=port)
 
@@ -92,8 +92,8 @@ class Server:
         for path in root.iterdir():
             if path.name.startswith('_') or not path.suffix == '.py':
                 continue
-            logger.debug(f'loading brain_computer_interface.server.{root.name}.{path.stem}')
-            module = importlib.import_module(f'.server.{root.name}.{path.stem}', package='brain_computer_interface')
+            logger.debug(f'loading brain_computer_interface.{root.name}.{path.stem}')
+            module = importlib.import_module(f'.{root.name}.{path.stem}', package='brain_computer_interface')
             cls.add_parsers(module)
         logger.info('done loading modules')
 
