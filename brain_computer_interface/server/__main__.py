@@ -24,7 +24,7 @@ def run(host, port, message_queue_url):
     run_server(host, port, publish_to_url(message_queue_url))
 
 
-def publish_to_url(url) -> Callable[[str], None]:
+def publish_to_url(url: str) -> Callable[[str], None]:
     """
     Return a publish method according to the scheme given in the url.
 
@@ -60,20 +60,6 @@ def publish_to_rmq(host: str, port: int) -> Callable[[str], None]:
         connection.close()
 
     return publish
-
-
-# TODO: each consumer
-# connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port))
-# channel = connection.channel()
-# channel.exchange_declare(exchange='snapshots', exchange_type='fanout')
-# queue_name = channel.queue_declare(queue='', exclusive=True).method.queue
-# channel.queue_bind(exchange='snapshots', queue=queue_name)
-#
-# def callback(ch, method, properties, message):
-#     print(" [x] %r" % message)
-#
-# channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
-# channel.start_consuming()
 
 
 if __name__ == '__main__':
