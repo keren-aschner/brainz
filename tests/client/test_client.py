@@ -1,6 +1,8 @@
 import json
 import pathlib
 
+import bson
+
 from brain_computer_interface.client import upload_sample
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'client'
@@ -23,7 +25,7 @@ def test_proto_sample(requests_mock):
 
     upload_sample(_SERVER_HOST, _SERVER_PORT, PROTO_SAMPLE, True)
 
-    data = json.loads(json.loads(requests_mock.last_request.text)['message'])
+    data = bson.loads(requests_mock.last_request.body)
     assert data['user'] == _USER
     assert data['snapshot'] == _SNAPSHOT
 
@@ -33,6 +35,6 @@ def test_bin_sample(requests_mock):
     requests_mock.post(f'http://{_SERVER_ADDRESS}/snapshot')
 
     upload_sample(_SERVER_HOST, _SERVER_PORT, BIN_SAMPLE, False)
-    data = json.loads(json.loads(requests_mock.last_request.text)['message'])
+    data = bson.loads(requests_mock.last_request.body)
     assert data['user'] == _USER
     assert data['snapshot'] == _SNAPSHOT

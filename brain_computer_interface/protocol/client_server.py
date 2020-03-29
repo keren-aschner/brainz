@@ -1,14 +1,25 @@
-import json
-
 from typing import Tuple
 
+import bson
 
-# TODO
 
 def serialize(user: dict, snapshot: dict) -> bytes:
-    return json.dumps({'user': user, 'snapshot': snapshot})
+    """
+    Serialize the given user and snapshot in the client-server protocol.
+
+    :param user: The user to serialize.
+    :param snapshot: The snapshot to serialize.
+    :return: The serialized message.
+    """
+    return bson.dumps({'user': user, 'snapshot': snapshot})
 
 
 def deserialize(message: bytes) -> Tuple[dict, dict]:
-    j = json.loads(message)
-    return j['user'], j['snapshot']
+    """
+    Deserialize the given message in the client-server protocol.
+
+    :param message: The message to deserialize.
+    :return: The deserialized user and snapshot.
+    """
+    data = bson.loads(message)
+    return data['user'], data['snapshot']

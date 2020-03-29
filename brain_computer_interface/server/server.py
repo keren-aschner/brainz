@@ -53,8 +53,8 @@ def get_app(publish: Callable[[str], None]) -> Flask:
         """
 
         def post(self):
-            message = request.get_json()['message']
-            publish(prepare_to_publish(message))
+            message = prepare_to_publish(request.get_data())
+            publish(message)
             logger.info('Published message')
             return {}, 201
 

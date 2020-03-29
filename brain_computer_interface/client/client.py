@@ -43,7 +43,7 @@ def upload_snapshot(host: str, port: Union[str, int], user: dict, snapshot: dict
     """
     try:
         snapshot = {field: snapshot[field] for field in config}
-        requests.post(f'http://{host}:{port}/snapshot', json={'message': serialize(user, snapshot)})
+        requests.post(f'http://{host}:{port}/snapshot', data=serialize(user, snapshot))
         logger.debug('Uploaded snapshot')
     except Exception:
         logger.exception("Error during uploading snapshot")

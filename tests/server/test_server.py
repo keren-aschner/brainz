@@ -1,14 +1,14 @@
-import json
 import multiprocessing
 import os
 import pathlib
 import time
 from datetime import datetime, timezone
 
+import bson
 import pytest
 import requests
 
-from brain_computer_interface.server.server import run_server, Server
+from brain_computer_interface.server.server import run_server
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'server'
 _SERVER_HOST = '127.0.0.1'
@@ -48,7 +48,7 @@ def test_config(data_dir):
 def test_snapshot(data_dir):
     time.sleep(0.5)
     response = requests.post(f'http://{_SERVER_HOST}:{_SERVER_PORT}/snapshot',
-                             json={'message': json.dumps({'user': _USER, 'snapshot': _SNAPSHOT})})
+                             data=bson.dumps({'user': _USER, 'snapshot': _SNAPSHOT}))
     assert response.status_code == 201
     f = data_dir / 'file'
     assert f.read_text() == 'publish called'
