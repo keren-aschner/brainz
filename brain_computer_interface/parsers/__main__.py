@@ -1,12 +1,10 @@
-from typing import Callable
-
 import click
 import pika
 from furl import furl
 from pika.channel import Channel
 from pika.spec import Basic, BasicProperties
 
-from . import version, parse, get_parser
+from . import version, parse, get_parser, Parser
 
 
 @click.group()
@@ -35,11 +33,11 @@ def run_parser(parser, message_queue_url):
     consume(message_queue_url, get_parser(parser))
 
 
-def consume(url: str, parser: Callable[[bytes], bytes]) -> None:
+def consume(url: str, parser: Parser) -> None:
     """
     Consume messages from the message queue on the given url.
 
-    :param url: The url of the message queueu.
+    :param url: The url of the message queue.
     :param parser: The method to use on each received message.
     """
     url = furl(url)
@@ -49,7 +47,7 @@ def consume(url: str, parser: Callable[[bytes], bytes]) -> None:
         raise NotImplementedError(f'Not supported scheme {url.scheme}')
 
 
-def consume_rmq(host: str, port: int, parser: Callable[[bytes], bytes]):
+def consume_rmq(host: str, port: int, parser: Parser):
     """
     Consume messages from the `snapshots` exchange on the given RabbitMQ host.
 
@@ -66,7 +64,7 @@ def consume_rmq(host: str, port: int, parser: Callable[[bytes], bytes]):
     channel.queue_bind(exchange='snapshots', queue=queue_name)
 
     def callback(ch: Channel, method: Basic.Deliver, properties: BasicProperties, message: bytes) -> None:
-        parsed = parser(message)
+        parsed = parser.parse(message)
         ch.basic_publish(exchange=parser.name, routing_key='', body=parsed)
 
     channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
