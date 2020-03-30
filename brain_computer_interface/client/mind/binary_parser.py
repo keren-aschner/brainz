@@ -49,7 +49,7 @@ class ColorImageAdapter(Adapter, ABC):
     """
 
     def _decode(self, obj, context, path):
-        return base64.b64encode(b''.join(map(lambda bgr: bytes(bgr[::-1]), obj))).decode()
+        return b''.join(map(lambda bgr: bytes(bgr[::-1]), obj))
 
 
 class StrAdapter(Adapter, ABC):

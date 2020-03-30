@@ -1,4 +1,3 @@
-import json
 import pathlib
 
 import bson
@@ -8,8 +7,8 @@ from brain_computer_interface.client import upload_sample
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'client'
 PROTO_SAMPLE = RESOURCES / 'sample.mind.gz'
 BIN_SAMPLE = RESOURCES / 'sample.mind'
-with open(RESOURCES / 'snapshot.json', 'r') as f:
-    _SNAPSHOT = json.load(f)
+with open(RESOURCES / 'snapshot.bson', 'rb') as f:
+    _SNAPSHOT = bson.loads(f.read())
 
 _USER = {'user_id': '42', 'username': 'Dan Gittik', 'birthday': 699746400, 'gender': 'MALE'}
 

@@ -1,3 +1,4 @@
+import base64
 import gzip
 import struct
 from typing import BinaryIO
@@ -6,6 +7,7 @@ from typing.io import IO
 from google.protobuf.json_format import MessageToDict
 
 from .sample_parser import SampleParser, ParsingError
+from ...protocol.fields import COLOR_IMAGE, DATA
 from ...protocol.mind_pb2 import User, Snapshot
 
 
@@ -31,7 +33,9 @@ class ProtobufParser(SampleParser):
         try:
             snapshot = Snapshot()
             snapshot.ParseFromString(self._read(stream))
-            return MessageToDict(snapshot, including_default_value_fields=True, preserving_proto_field_name=True)
+            message = MessageToDict(snapshot, including_default_value_fields=True, preserving_proto_field_name=True)
+            message[COLOR_IMAGE][DATA] = base64.b64decode(message[COLOR_IMAGE][DATA])
+            return message
         except Exception as e:
             raise ParsingError(e)
 

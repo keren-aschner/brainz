@@ -1,5 +1,3 @@
-import base64
-
 from PIL import Image
 
 from ..context import Context
@@ -15,7 +13,7 @@ def parse_color_image(message: bytes) -> bytes:
 
     color_image = context.snapshot[COLOR_IMAGE]
     image = Image.new('RGB', (color_image[WIDTH], color_image[HEIGHT]))
-    data = base64.b64decode(color_image[DATA])
+    data = color_image[DATA]
     data = [(data[i], data[i + 1], data[i + 2]) for i in range(0, len(data), 3)]
     image.putdata(data)
     image.save(color_image_path)

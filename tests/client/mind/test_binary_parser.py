@@ -7,7 +7,7 @@ import pytest
 from brain_computer_interface.client.mind.binary_parser import BinaryParser, ParsingError
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'client' / 'mind'
-with open(RESOURCES / 'color_image.data', 'r') as f:
+with open(RESOURCES / 'color_image.bin', 'rb') as f:
     COLOR_IMAGE = f.read()
 
 with open(RESOURCES / 'depth_image.json', 'r') as f:
