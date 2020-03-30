@@ -1,0 +1,36 @@
+import os
+import pathlib
+from datetime import datetime, timezone
+
+from brain_computer_interface.parsers import get_all_fields, parse
+from brain_computer_interface.protocol.parsers_saver import deserialize
+from brain_computer_interface.protocol.server_parsers import serialize
+
+RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'parsers'
+_USER = {'user_id': '1', 'name': 'Keren Solodkin', 'birthday': datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
+         'gender': 'f'}
+_POSE = {'translation': {'x': 0.487, 'y': 0.009, 'z': -1.13},
+         'rotation': {'x': 0.487, 'y': 0.009, 'z': -1.13, 'w': 2.5}}
+_TIMESTAMP = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
+_SNAPSHOT = {'timestamp': _TIMESTAMP.timestamp() * 1000, 'pose': _POSE}
+
+
+def test_get_all_fields():
+    cwd = os.getcwd()
+    os.chdir(RESOURCES)
+
+    assert set(get_all_fields()) == {'color_image', 'pose', 'timestamp'}
+
+    os.chdir(cwd)
+
+
+def test_parse():
+    cwd = os.getcwd()
+    os.chdir(RESOURCES)
+
+    result = deserialize(parse('pose', serialize(_USER, _SNAPSHOT)))
+    assert result['user'] == _USER
+    assert result['timestamp'] == _TIMESTAMP.timestamp()
+    assert result['pose'] == _POSE
+
+    os.chdir(cwd)

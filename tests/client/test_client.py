@@ -37,3 +37,10 @@ def test_bin_sample(requests_mock):
     data = bson.loads(requests_mock.last_request.body)
     assert data['user'] == _USER
     assert data['snapshot'] == _SNAPSHOT
+
+
+def test_exception(requests_mock):
+    requests_mock.get(f'http://{_SERVER_ADDRESS}/config', json={'config': _CONFIG})
+    requests_mock.post(f'http://{_SERVER_ADDRESS}/snapshot', exc=ConnectionError)
+
+    upload_sample(_SERVER_HOST, _SERVER_PORT, PROTO_SAMPLE)
