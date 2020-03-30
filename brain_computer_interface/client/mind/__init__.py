@@ -1,3 +1,3 @@
 from .binary_parser import BinaryParser
-from .parser import ParsingError, Parser
+from .sample_parser import ParsingError, SampleParser
 from .protobuf_parser import ProtobufParser

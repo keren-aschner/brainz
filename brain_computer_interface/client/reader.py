@@ -1,7 +1,7 @@
-from .mind import Parser, BinaryParser, ProtobufParser, ParsingError
+from .mind import SampleParser, BinaryParser, ProtobufParser, ParsingError
 
 
-def _get_parser(protobuf: bool) -> Parser:
+def _get_parser(protobuf: bool) -> SampleParser:
     """
     :param protobuf: Whether to return the protobuf parser.
     :return: The relevant parser according to `protobuf`.

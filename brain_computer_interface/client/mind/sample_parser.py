@@ -8,7 +8,7 @@ class ParsingError(Exception):
     pass
 
 
-class Parser:
+class SampleParser:
     def parse_user(self, stream: IO) -> dict:
         """
         Parse a user from the given stream.

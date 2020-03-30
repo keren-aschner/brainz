@@ -5,10 +5,10 @@ from typing import BinaryIO, Union, Any
 from construct import Struct, Int32ul, Int64ul, PascalString, PaddedString, Float64l, Array, this, Byte, Float32l, \
     StreamError, Adapter, Enum, Container
 
-from .parser import Parser, ParsingError
+from .sample_parser import SampleParser, ParsingError
 
 
-class BinaryParser(Parser):
+class BinaryParser(SampleParser):
     """
     A parser for the binary format.
     """

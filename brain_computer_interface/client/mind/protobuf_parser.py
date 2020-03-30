@@ -5,11 +5,11 @@ from typing.io import IO
 
 from google.protobuf.json_format import MessageToDict
 
-from .parser import Parser, ParsingError
+from .sample_parser import SampleParser, ParsingError
 from ...protocol.mind_pb2 import User, Snapshot
 
 
-class ProtobufParser(Parser):
+class ProtobufParser(SampleParser):
     """
     A parser for the protobuf format.
     """
