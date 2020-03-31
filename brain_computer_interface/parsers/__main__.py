@@ -58,14 +58,14 @@ def consume_rmq(host: str, port: int, parser: Parser):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port))
     channel = connection.channel()
     channel.exchange_declare(exchange='snapshots', exchange_type='fanout')
-    channel.exchange_declare(exchange=parser.name, exchange_type='fanout')
-
     queue_name = channel.queue_declare(queue='', exclusive=True).method.queue
     channel.queue_bind(exchange='snapshots', queue=queue_name)
 
+    channel.exchange_declare(exchange='parsers_data', exchange_type='topic')
+
     def callback(ch: Channel, method: Basic.Deliver, properties: BasicProperties, message: bytes) -> None:
         parsed = parser.parse(message)
-        ch.basic_publish(exchange=parser.name, routing_key='', body=parsed)
+        ch.basic_publish(exchange='parsers_data', routing_key=parser.name, body=parsed)
 
     channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
     channel.start_consuming()
