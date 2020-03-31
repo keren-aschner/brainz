@@ -24,7 +24,7 @@ def run(host, port, message_queue_url):
     run_server(host, port, publish_to_url(message_queue_url))
 
 
-def publish_to_url(url: str) -> Callable[[str], None]:
+def publish_to_url(url: str) -> Callable[[bytes], None]:
     """
     Return a publish method according to the scheme given in the url.
 
@@ -38,7 +38,7 @@ def publish_to_url(url: str) -> Callable[[str], None]:
         raise NotImplementedError(f'Not supported scheme {url.scheme}')
 
 
-def publish_to_rmq(host: str, port: int) -> Callable[[str], None]:
+def publish_to_rmq(host: str, port: int) -> Callable[[bytes], None]:
     """
     Return a publish method to RabbitMQ.
 
@@ -47,7 +47,7 @@ def publish_to_rmq(host: str, port: int) -> Callable[[str], None]:
     :return: The created publish method.
     """
 
-    def publish(message: str) -> None:
+    def publish(message: bytes) -> None:
         """
         Publish a message to the 'snapshots' exchange on RabbitMQ.
 
