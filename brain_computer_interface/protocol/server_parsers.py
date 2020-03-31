@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import Tuple
 
-from .fields import COLOR_IMAGE, TIMESTAMP, USER, SNAPSHOT, DATA
+from .fields import COLOR_IMAGE, TIMESTAMP, USER, SNAPSHOT, DATA, USER_ID
 
 
 def serialize(user: dict, snapshot: dict) -> bytes:
@@ -15,7 +15,7 @@ def serialize(user: dict, snapshot: dict) -> bytes:
     :param snapshot: The snapshot to serialize.
     :return: The serialized message.
     """
-    path = Path('/opt/brain_computer_interface/server_parsers') / user['user_id'] / str(snapshot[TIMESTAMP])
+    path = Path('/opt/brain_computer_interface/server_parsers') / user[USER_ID] / str(snapshot[TIMESTAMP])
     os.makedirs(path, exist_ok=True)
     if COLOR_IMAGE in snapshot:
         path = path / f'{COLOR_IMAGE}_data.bin'

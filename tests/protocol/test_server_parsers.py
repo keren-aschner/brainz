@@ -2,11 +2,12 @@ import pathlib
 
 import bson
 
+from brain_computer_interface.protocol.fields import *
 from brain_computer_interface.protocol.server_parsers import serialize, deserialize
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'protocol'
 
-_USER = {'user_id': '42', 'username': 'Dan Gittik', 'birthday': 699746400, 'gender': 'MALE'}
+_USER = {USER_ID: '42', USERNAME: 'Dan Gittik', BIRTHDAY: 699746400, GENDER: 'MALE'}
 
 
 def test_serialize_deserialize():
