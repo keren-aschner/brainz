@@ -1,6 +1,6 @@
 from typing import Tuple
 
-import bson
+from bson.json_util import dumps, loads
 
 from .fields import SNAPSHOT, USER
 
@@ -13,7 +13,7 @@ def serialize(user: dict, snapshot: dict) -> bytes:
     :param snapshot: The snapshot to serialize.
     :return: The serialized message.
     """
-    return bson.dumps({USER: user, SNAPSHOT: snapshot})
+    return dumps({USER: user, SNAPSHOT: snapshot})
 
 
 def deserialize(message: bytes) -> Tuple[dict, dict]:
@@ -23,5 +23,5 @@ def deserialize(message: bytes) -> Tuple[dict, dict]:
     :param message: The message to deserialize.
     :return: The deserialized user and snapshot.
     """
-    data = bson.loads(message)
+    data = loads(message)
     return data[USER], data[SNAPSHOT]

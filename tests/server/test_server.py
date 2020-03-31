@@ -4,9 +4,9 @@ import pathlib
 import time
 from datetime import datetime, timezone
 
-import bson
 import pytest
 import requests
+from bson.json_util import dumps
 
 from brain_computer_interface.protocol.fields import *
 from brain_computer_interface.server.server import run_server
@@ -48,7 +48,7 @@ def test_config(data_dir):
 def test_snapshot(data_dir):
     time.sleep(0.5)
     response = requests.post(f'http://{_SERVER_HOST}:{_SERVER_PORT}/snapshot',
-                             data=bson.dumps({USER: _USER, 'snapshot': _SNAPSHOT}))
+                             data=dumps({USER: _USER, 'snapshot': _SNAPSHOT}))
     assert response.status_code == 201
     f = data_dir / 'file'
     assert f.read_text() == 'publish called'
