@@ -15,7 +15,9 @@ def cli():
 
 
 @cli.command('save')
-@click.option('-d', '--database', default='', help='URL to the database to use. Default is .')  # TODO: default
+# TODO: default
+@click.option('-d', '--database', default='mongodb://??:27017/',
+              help='URL to the database to use. Default is mongodb://??:27017/.')
 @click.argument('topic')
 @click.argument('data_path', type=click.File('rb'))
 def save(database, topic, data):
