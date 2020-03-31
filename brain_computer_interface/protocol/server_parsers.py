@@ -1,9 +1,8 @@
 import json
-import os
-from pathlib import Path
 from typing import Tuple
 
-from .fields import COLOR_IMAGE, TIMESTAMP, USER, SNAPSHOT, DATA, USER_ID
+from .common import serialize_bin_data, deserialize_bin_data
+from .fields import USER, SNAPSHOT
 
 
 def serialize(user: dict, snapshot: dict) -> bytes:
@@ -15,13 +14,7 @@ def serialize(user: dict, snapshot: dict) -> bytes:
     :param snapshot: The snapshot to serialize.
     :return: The serialized message.
     """
-    path = Path('/opt/brain_computer_interface/server_parsers') / user[USER_ID] / str(snapshot[TIMESTAMP])
-    os.makedirs(path, exist_ok=True)
-    if COLOR_IMAGE in snapshot:
-        path = path / f'{COLOR_IMAGE}_data.bin'
-        with open(path, 'wb') as f:
-            f.write(snapshot[COLOR_IMAGE][DATA])
-        snapshot[COLOR_IMAGE][DATA] = str(path.absolute())
+    snapshot = serialize_bin_data('server_parsers', user, snapshot)
     return json.dumps({USER: user, SNAPSHOT: snapshot})
 
 
@@ -34,8 +27,5 @@ def deserialize(message: bytes) -> Tuple[dict, dict]:
     :return: The deserialized user and snapshot.
     """
     j = json.loads(message)
-    snapshot = j[SNAPSHOT]
-    if COLOR_IMAGE in snapshot:
-        with open(snapshot[COLOR_IMAGE][DATA], 'rb') as f:
-            snapshot[COLOR_IMAGE][DATA] = f.read()
+    snapshot = deserialize_bin_data(j[SNAPSHOT])
     return j[USER], snapshot
