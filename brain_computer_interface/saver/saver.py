@@ -1,6 +1,7 @@
 from furl import furl
 from pymongo import MongoClient
 
+from ..protocol.fields import USER, USER_ID, TIMESTAMP
 from ..protocol.parsers_saver import deserialize
 
 
@@ -19,4 +20,10 @@ class Saver:
         :param topic: The topic of the given data.
         :param data: The data to save.
         """
-        self.db[topic].insert_one(deserialize(data))
+        data = deserialize(data)
+        user = data.pop(USER)
+        user_id = user.pop(USER_ID)
+        timestamp = data.pop(TIMESTAMP)
+        self.db.users.update_one({USER_ID: user_id}, {'$set': {**user}}, upsert=True)
+        self.db.snapshots.update_one({USER_ID: user_id, TIMESTAMP: timestamp},
+                                     {'$set': {topic: data}}, upsert=True)
