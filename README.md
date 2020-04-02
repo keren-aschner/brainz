@@ -1,9 +1,10 @@
-![Build Status](https://travis-ci.org/kerenso/brainz.svg?branch=master)
-![coverage](https://codecov.io/github/kerenso/brainz/branch/master/graph/badge.svg)
+[![Build Status](https://travis-ci.org/kerenso/brainz.svg?branch=master)](https://travis-ci.org/kerenso/brainz)
+[![Documentation Status](https://readthedocs.org/projects/brainz/badge/?version=latest)](https://brainz.readthedocs.io/en/latest/?badge=latest)
+[![codecov](https://codecov.io/gh/kerenso/brainz/branch/master/graph/badge.svg)](https://codecov.io/gh/kerenso/brainz)
 
-# brainz
+# Brainz
 Project for Advanced System Design Course at Tel Aviv University.
-See [full documentation](https://brain-computer-interface.readthedocs.io/en/latest/).
+See [full documentation](https://brainz.readthedocs.io/en/latest/).
 
 ## Installation
 
