@@ -23,4 +23,4 @@ def run(host, port, database_url):
 
 
 if __name__ == '__main__':
-    cli(prog_name='brain_computer_interface.api')
+    cli(prog_name='brainz.api')

@@ -72,4 +72,4 @@ def get_result(host, port, save, user_id, snapshot_id, result):
 
 
 if __name__ == '__main__':
-    cli(prog_name='brain_computer_interface.cli')
+    cli(prog_name='brainz.cli')

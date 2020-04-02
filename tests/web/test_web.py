@@ -7,7 +7,7 @@ import time
 import pytest
 import requests
 
-from brain_computer_interface.web.web import run_webserver
+from brainz.web.web import run_webserver
 
 _WEBSERVER_ADDRESS = '127.0.0.1', 8000
 _WEBSERVER_URL = 'http://localhost:8000'

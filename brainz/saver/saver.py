@@ -11,7 +11,7 @@ class Saver:
         if not url.scheme == 'mongodb':
             raise NotImplementedError(f'Not supported scheme {url.scheme}.')
 
-        self.db = MongoClient(database_url).brain_computer_interface
+        self.db = MongoClient(database_url).brainz
 
     def save(self, topic: str, data: bytes) -> None:
         """

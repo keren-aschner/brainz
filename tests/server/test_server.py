@@ -8,8 +8,8 @@ import pytest
 import requests
 from bson.json_util import dumps
 
-from brain_computer_interface.protocol.fields import *
-from brain_computer_interface.server.server import run_server
+from brainz.protocol.fields import *
+from brainz.server.server import run_server
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'server'
 _SERVER_HOST = '127.0.0.1'

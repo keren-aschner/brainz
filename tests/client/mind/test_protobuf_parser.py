@@ -4,8 +4,8 @@ from datetime import datetime, timezone
 
 import pytest
 
-from brain_computer_interface.client.mind.protobuf_parser import ProtobufParser, ParsingError
-from brain_computer_interface.protocol.fields import *
+from brainz.client.mind.protobuf_parser import ProtobufParser, ParsingError
+from brainz.protocol.fields import *
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'client' / 'mind'
 with open(RESOURCES / 'color_image.bin', 'rb') as f:

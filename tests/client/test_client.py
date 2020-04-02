@@ -2,8 +2,8 @@ import pathlib
 
 from bson.json_util import loads
 
-from brain_computer_interface.client import upload_sample
-from brain_computer_interface.protocol.fields import *
+from brainz.client import upload_sample
+from brainz.protocol.fields import *
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'client'
 PROTO_SAMPLE = RESOURCES / 'sample.mind.gz'

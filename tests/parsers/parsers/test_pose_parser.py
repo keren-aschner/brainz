@@ -1,9 +1,9 @@
 from datetime import datetime, timezone
 
-from brain_computer_interface.parsers.parsers.pose_parser import parse_pose
-from brain_computer_interface.protocol.fields import *
-from brain_computer_interface.protocol.parsers_saver import deserialize
-from brain_computer_interface.protocol.server_parsers import serialize
+from brainz.parsers.parsers.pose_parser import parse_pose
+from brainz.protocol.fields import *
+from brainz.protocol.parsers_saver import deserialize
+from brainz.protocol.server_parsers import serialize
 
 _USER = {USER_ID: '1', USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          GENDER: 'f'}

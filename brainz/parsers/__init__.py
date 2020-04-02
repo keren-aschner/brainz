@@ -30,14 +30,14 @@ def get_parser(parser_name: str) -> Parser:
 
 def get_parsers() -> List[Parser]:
     """
-    Get all the parsers from brain_computer_interface.parser package
+    Get all the parsers from brainz.parser package
     """
     parsers = []
-    root = Path('brain_computer_interface/parsers/parsers').absolute()
+    root = Path('brainz/parsers/parsers').absolute()
     for path in root.iterdir():
         if path.name.startswith('_') or not path.suffix == '.py':
             continue
-        module = importlib.import_module(f'.{path.stem}', package='brain_computer_interface.parsers.parsers')
+        module = importlib.import_module(f'.{path.stem}', package='brainz.parsers.parsers')
         parsers.extend([Parser(parser) for _, parser in inspect.getmembers(module, is_parser)])
 
     return parsers

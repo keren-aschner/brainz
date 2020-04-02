@@ -6,14 +6,14 @@ from .fields import COLOR_IMAGE, TIMESTAMP, DATA, USER_ID
 
 def serialize_bin_data(directory: str, user: dict, snapshot: dict) -> dict:
     """
-    Save the binary fields from the snapshot in a file in /opt/brain_computer_interface.
+    Save the binary fields from the snapshot in a file in /opt/brainz.
 
     :param directory: The directory for saving binary data.
     :param user: The user to serialize.
     :param snapshot: The snapshot to serialize.
     :return: The serialized message.
     """
-    path = Path('/opt/brain_computer_interface') / directory / user[USER_ID] / str(snapshot[TIMESTAMP])
+    path = Path('/opt/brainz') / directory / user[USER_ID] / str(snapshot[TIMESTAMP])
     os.makedirs(path, exist_ok=True)
     if COLOR_IMAGE in snapshot:
         path = path / f'{COLOR_IMAGE}_data.bin'
@@ -25,7 +25,7 @@ def serialize_bin_data(directory: str, user: dict, snapshot: dict) -> dict:
 
 def deserialize_bin_data(snapshot: dict) -> dict:
     """.
-    Load the binary fields from /opt/brain_computer_interface.
+    Load the binary fields from /opt/brainz.
 
     :param snapshot: The snapshot to deserialize.
     :return: The snapshot with the binary fields.

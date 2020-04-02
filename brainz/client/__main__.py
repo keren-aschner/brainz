@@ -22,4 +22,4 @@ def upload(host, port, sample, binary):
 
 
 if __name__ == '__main__':
-    cli(prog_name='brain_computer_interface.client')
+    cli(prog_name='brainz.client')

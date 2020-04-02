@@ -2,8 +2,8 @@ import pathlib
 
 from bson.json_util import loads
 
-from brain_computer_interface.protocol.client_server import serialize, deserialize
-from brain_computer_interface.protocol.fields import *
+from brainz.protocol.client_server import serialize, deserialize
+from brainz.protocol.fields import *
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'protocol'
 

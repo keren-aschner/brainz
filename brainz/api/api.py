@@ -18,7 +18,7 @@ def run_api_server(host: str, port: int, database_url: str):
     if not url.scheme == 'mongodb':
         raise NotImplementedError(f'Not supported scheme {url.scheme}.')
 
-    db = MongoClient(database_url).brain_computer_interface
+    db = MongoClient(database_url).brainz
 
     app = Flask(__name__)
 

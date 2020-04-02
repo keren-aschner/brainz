@@ -72,4 +72,4 @@ def consume_rmq(host: str, port: int, parser: Parser):
 
 
 if __name__ == '__main__':
-    cli(prog_name='brain_computer_interface.parsers')
+    cli(prog_name='brainz.parsers')

@@ -1,9 +1,9 @@
 from datetime import datetime, timezone
 from unittest.mock import patch, call
 
-from brain_computer_interface.protocol.fields import *
-from brain_computer_interface.protocol.parsers_saver import serialize
-from brain_computer_interface.saver import Saver
+from brainz.protocol.fields import *
+from brainz.protocol.parsers_saver import serialize
+from brainz.saver import Saver
 
 _USER = {USER_ID: '1', USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          GENDER: 'f'}

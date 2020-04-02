@@ -8,7 +8,7 @@ from .fields import USER, SNAPSHOT
 def serialize(user: dict, snapshot: dict) -> bytes:
     """
     Serialize the given user and snapshot in the server-parsers protocol.
-    Save the binary fields in a file in /opt/brain_computer_interface/server_parsers.
+    Save the binary fields in a file in /opt/brainz/server_parsers.
 
     :param user: The user to serialize.
     :param snapshot: The snapshot to serialize.
@@ -21,7 +21,7 @@ def serialize(user: dict, snapshot: dict) -> bytes:
 def deserialize(message: bytes) -> Tuple[dict, dict]:
     """
     Deserialize the given message in the server-parsers protocol.
-    Load the binary fields from /opt/brain_computer_interface/server_parsers.
+    Load the binary fields from /opt/brainz/server_parsers.
 
     :param message: The message to deserialize.
     :return: The deserialized user and snapshot.

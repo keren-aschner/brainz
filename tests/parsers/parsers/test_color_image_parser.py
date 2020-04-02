@@ -2,11 +2,11 @@ import os
 import pathlib
 from datetime import datetime, timezone
 
-from brain_computer_interface.parsers.context import Context
-from brain_computer_interface.parsers.parsers.color_image_parser import parse_color_image
-from brain_computer_interface.protocol.fields import *
-from brain_computer_interface.protocol.parsers_saver import deserialize
-from brain_computer_interface.protocol.server_parsers import serialize
+from brainz.parsers.context import Context
+from brainz.parsers.parsers.color_image_parser import parse_color_image
+from brainz.protocol.fields import *
+from brainz.protocol.parsers_saver import deserialize
+from brainz.protocol.server_parsers import serialize
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'parsers' / 'parsers'
 _USER = {USER_ID: '1', USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),

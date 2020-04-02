@@ -63,4 +63,4 @@ def publish_to_rmq(host: str, port: int) -> Callable[[bytes], None]:
 
 
 if __name__ == '__main__':
-    cli(prog_name='brain_computer_interface.server')
+    cli(prog_name='brainz.server')

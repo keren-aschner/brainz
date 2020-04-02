@@ -79,4 +79,4 @@ def consume_rmq(host: str, port: int, db_url: str):
 
 
 if __name__ == '__main__':
-    cli(prog_name='brain_computer_interface.saver')
+    cli(prog_name='brainz.saver')

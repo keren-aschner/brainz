@@ -9,7 +9,7 @@ from ..protocol.server_parsers import deserialize
 
 
 class Context:
-    BASE_DIR = Path('/opt/brain_computer_interface/data/')
+    BASE_DIR = Path('/opt/brainz/data/')
 
     def __init__(self, message: bytes):
         self.user, self.snapshot = self.deserialize(message)
