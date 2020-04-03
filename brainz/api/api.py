@@ -23,13 +23,13 @@ def run_api_server(host: str, port: int, database_url: str):
     app = Flask(__name__)
 
     api = Api(app)
-    api.add_resource(Users, '/users', resource_class_args=db)
-    api.add_resource(User, '/users/<int:user_id>', resource_class_args=db)
-    api.add_resource(Snapshots, '/users/<int:user_id>/snapshots', resource_class_args=db)
-    api.add_resource(Snapshot, '/users/<int:user_id>/snapshots/<int:snapshot_id>', resource_class_args=db)
+    api.add_resource(Users, '/users', resource_class_args=(db,))
+    api.add_resource(User, '/users/<int:user_id>', resource_class_args=(db,))
+    api.add_resource(Snapshots, '/users/<int:user_id>/snapshots', resource_class_args=(db,))
+    api.add_resource(Snapshot, '/users/<int:user_id>/snapshots/<int:snapshot_id>', resource_class_args=(db,))
     api.add_resource(Result, '/users/<int:user_id>/snapshots/<int:snapshot_id>/<string:result_name>',
-                     resource_class_args=db)
+                     resource_class_args=(db,))
     api.add_resource(ResultData, '/users/<int:user_id>/snapshots/<int:snapshot_id>/<string:result_name>/data',
-                     resource_class_args=db)
+                     resource_class_args=(db,))
 
     app.run(host=host, port=port)

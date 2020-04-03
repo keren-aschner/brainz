@@ -15,9 +15,8 @@ def cli():
 
 
 @cli.command('save')
-# TODO: default
-@click.option('-d', '--database', default='mongodb://??:27017/',
-              help='URL to the database to use. Default is mongodb://??:27017/.')
+@click.option('-d', '--database', default='mongodb://mongodb:27017/',
+              help='URL to the database to use. Default is mongodb://mongodb:27017/.')
 @click.argument('topic')
 @click.argument('data_path', type=click.File('rb'))
 def save(database, topic, data):
@@ -69,7 +68,7 @@ def consume_rmq(host: str, port: int, db_url: str):
     queue_name = channel.queue_declare('', exclusive=True).method.queue
 
     for parser in get_parsers():
-        channel.queue_bind(exchange='parsers_data', queue=queue_name, routing_key=parser.name)
+        channel.queue_bind(exchange='parsers_data', queue=queue_name, routing_key=parser.name) # TODO: routing key # ?
 
     def callback(ch: Channel, method: Basic.Deliver, properties: BasicProperties, message: bytes) -> None:
         saver.save(method.routing_key, message)

@@ -8,7 +8,7 @@ from ..parsers import get_all_fields
 from ..protocol.client_server import deserialize
 from ..protocol.server_parsers import serialize
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%d-%m-%y %H:%M:%S')
 
