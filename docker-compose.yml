@@ -1,0 +1,79 @@
+version: '3'
+services:
+  server:
+    image: brainz
+    build: .
+    ports:
+      - 8000:8000
+    volumes:
+    - system_data:/opt/brainz
+    command: ./wait-for-it.sh rabbitmq:5672 -- python3.8 -m brainz.server run-server rabbitmq://rabbitmq:5672/
+    depends_on:
+      - rabbitmq
+  color-image-parser:
+    image: brainz
+    volumes:
+      - system_data:/opt/brainz
+    command: ./wait-for-it.sh rabbitmq:5672 -- python3.8 -m brainz.parsers run-parser color_image rabbitmq://rabbitmq:5672/
+    depends_on:
+      - server
+      - rabbitmq
+  depth-image-parser:
+    image: brainz
+    volumes:
+      - system_data:/opt/brainz
+    command: ./wait-for-it.sh rabbitmq:5672 -- python3.8 -m brainz.parsers run-parser depth_image rabbitmq://rabbitmq:5672/
+    depends_on:
+      - server
+      - rabbitmq
+  feelings-parser:
+    image: brainz
+    volumes:
+      - system_data:/opt/brainz
+    command: ./wait-for-it.sh rabbitmq:5672 -- python3.8 -m brainz.parsers run-parser feelings rabbitmq://rabbitmq:5672/
+    depends_on:
+      - server
+      - rabbitmq
+  pose-parser:
+    image: brainz
+    volumes:
+      - system_data:/opt/brainz
+    command: ./wait-for-it.sh rabbitmq:5672 -- python3.8 -m brainz.parsers run-parser pose rabbitmq://rabbitmq:5672/
+    depends_on:
+      - server
+      - rabbitmq
+  saver:
+    image: brainz
+    volumes:
+      - system_data:/opt/brainz
+    command: ./wait-for-it.sh rabbitmq:5672 -- ./wait-for-it.sh mongodb:27017 -- python3.8 -m brainz.saver run-saver mongodb://mongodb:27017/ rabbitmq://rabbitmq:5672/
+    depends_on:
+      - server
+      - rabbitmq
+      - mongodb
+  api-server:
+    image: brainz
+    volumes:
+      - system_data:/opt/brainz
+    ports:
+      - 5000:5000
+    command: ./wait-for-it.sh mongodb:27017 -- python3.8 -m brainz.api run-server
+    depends_on:
+      - server
+      - mongodb
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+volumes:
+  mongodb_data_container:
+  system_data:
