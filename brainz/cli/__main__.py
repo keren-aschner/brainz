@@ -17,7 +17,7 @@ def get_users(host, port):
     """
     Return the user ids and names from the api.
    """
-    return get(f'http://{host}:{port}/users').json()
+    print(get(f'http://{host}:{port}/users').json())
 
 
 @cli.command('get-user')
@@ -28,7 +28,7 @@ def get_user(host, port, user_id):
     """
      Return the details of the user with USER_ID.
     """
-    return get(f'http://{host}:{port}/users/{user_id}').json()
+    print(get(f'http://{host}:{port}/users/{user_id}').json())
 
 
 @cli.command('get-snapshots')
@@ -39,7 +39,7 @@ def get_snapshots(host, port, user_id):
     """
      Return the snapshot ids and timestamps for user USER_ID.
     """
-    return get(f'http://{host}:{port}/users/{user_id}/snapshots').json()
+    print(get(f'http://{host}:{port}/users/{user_id}/snapshots').json())
 
 
 @cli.command('get-snapshot')
@@ -51,7 +51,7 @@ def get_snapshot(host, port, user_id, snapshot_id):
     """
      Return the details of snapshot SNAPSHOT_ID of user USER_ID.
     """
-    return get(f'http://{host}:{port}/users/{user_id}/snapshots/{snapshot_id}').json()
+    print(get(f'http://{host}:{port}/users/{user_id}/snapshots/{snapshot_id}').json())
 
 
 @cli.command('get-result')
@@ -66,9 +66,9 @@ def get_result(host, port, save, user_id, snapshot_id, result):
     Return the RESULT of snapshot SNAPSHOT_ID of user USER_ID.
     """
     if save is not None:
-        save.write(get(f'http://{host}:{port}/users/{user_id}/snapshots/{snapshot_id}/{result}/data'))
-
-    return get(f'http://{host}:{port}/users/{user_id}/snapshots/{snapshot_id}/{result}').json()
+        save.write(get(f'http://{host}:{port}/users/{user_id}/snapshots/{snapshot_id}/{result}/data').content)
+    else:
+        print(get(f'http://{host}:{port}/users/{user_id}/snapshots/{snapshot_id}/{result}').json())
 
 
 if __name__ == '__main__':

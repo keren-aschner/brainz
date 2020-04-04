@@ -1,3 +1,5 @@
+import logging
+
 import click
 import pika
 from furl import furl
@@ -5,6 +7,12 @@ from pika.channel import Channel
 from pika.spec import Basic, BasicProperties
 
 from . import version, parse, get_parser, Parser
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%d-%m-%y %H:%M:%S')
+
+logger = logging.getLogger('parsers')
 
 
 @click.group()
@@ -66,8 +74,12 @@ def consume_rmq(host: str, port: int, parser: Parser):
     def callback(ch: Channel, method: Basic.Deliver, properties: BasicProperties, message: bytes) -> None:
         parsed = parser.parse(message)
         ch.basic_publish(exchange='parsers_data', routing_key=parser.name, body=parsed)
+        logger.info('Published message')
 
     channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
+
+    logger.info(f'Starting consuming for parser {parser.name}')
+
     channel.start_consuming()
 
 

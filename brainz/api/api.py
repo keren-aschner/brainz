@@ -1,9 +1,17 @@
+import logging
+
 from flask import Flask
 from flask_restful import Api
 from furl import furl
 from pymongo import MongoClient
 
 from .resources import Users, User, Snapshots, Snapshot, Result, ResultData
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%d-%m-%y %H:%M:%S')
+
+logger = logging.getLogger(__name__)
 
 
 def run_api_server(host: str, port: int, database_url: str):
@@ -26,10 +34,10 @@ def run_api_server(host: str, port: int, database_url: str):
     api.add_resource(Users, '/users', resource_class_args=(db,))
     api.add_resource(User, '/users/<int:user_id>', resource_class_args=(db,))
     api.add_resource(Snapshots, '/users/<int:user_id>/snapshots', resource_class_args=(db,))
-    api.add_resource(Snapshot, '/users/<int:user_id>/snapshots/<int:snapshot_id>', resource_class_args=(db,))
-    api.add_resource(Result, '/users/<int:user_id>/snapshots/<int:snapshot_id>/<string:result_name>',
+    api.add_resource(Snapshot, '/users/<int:user_id>/snapshots/<string:snapshot_id>', resource_class_args=(db,))
+    api.add_resource(Result, '/users/<int:user_id>/snapshots/<string:snapshot_id>/<string:result_name>',
                      resource_class_args=(db,))
-    api.add_resource(ResultData, '/users/<int:user_id>/snapshots/<int:snapshot_id>/<string:result_name>/data',
+    api.add_resource(ResultData, '/users/<int:user_id>/snapshots/<string:snapshot_id>/<string:result_name>/data',
                      resource_class_args=(db,))
 
     app.run(host=host, port=port)
