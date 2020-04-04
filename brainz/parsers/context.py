@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Tuple
 
-from ..protocol.fields import TIMESTAMP, USER, USER_ID
+from ..protocol.fields import TIMESTAMP, USER, USER_ID, DATA
 from ..protocol.parsers_saver import serialize
 from ..protocol.server_parsers import deserialize
 
@@ -16,11 +16,11 @@ class Context:
         self.timestamp = int(self.snapshot[TIMESTAMP]) / 1000
         self.timestamp_str = f'{datetime.utcfromtimestamp(self.timestamp):%Y-%m-%d_%H-%M-%S-%f}'
 
-    def serialize(self, data: dict) -> bytes:
+    def serialize(self, data) -> bytes:
         """
-        Serialize using the parsers-saver protocol.
+        Serialize data using the parsers-saver protocol.
         """
-        return serialize({**data, USER: self.user, TIMESTAMP: self.timestamp})
+        return serialize({DATA: data, USER: self.user, TIMESTAMP: self.timestamp})
 
     def path(self, filename: str) -> Path:
         """

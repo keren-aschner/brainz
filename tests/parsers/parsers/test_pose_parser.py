@@ -17,4 +17,4 @@ def test_parser():
     result = deserialize(parse_pose(serialize(_USER, _SNAPSHOT)))
     assert result[USER] == _USER
     assert result[TIMESTAMP] == _TIMESTAMP.timestamp()
-    assert result[POSE] == _POSE
+    assert result[DATA] == _POSE

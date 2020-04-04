@@ -16,4 +16,4 @@ def test_parser():
     result = deserialize(parse_feelings(serialize(_USER, _SNAPSHOT)))
     assert result[USER] == _USER
     assert result[TIMESTAMP] == _TIMESTAMP.timestamp()
-    assert result[FEELINGS] == _FEELINGS
+    assert result[DATA] == _FEELINGS

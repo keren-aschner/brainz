@@ -1,8 +1,16 @@
+import logging
+
 from furl import furl
 from pymongo import MongoClient
 
-from ..protocol.fields import USER, USER_ID, TIMESTAMP
+from ..protocol.fields import USER, USER_ID, TIMESTAMP, DATA
 from ..protocol.parsers_saver import deserialize
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                    datefmt='%d-%m-%y %H:%M:%S')
+
+logger = logging.getLogger(__name__)
 
 
 class Saver:
@@ -21,9 +29,8 @@ class Saver:
         :param data: The data to save.
         """
         data = deserialize(data)
-        user = data.pop(USER)
+        user = data[USER]
         user_id = user.pop(USER_ID)
-        timestamp = data.pop(TIMESTAMP)
         self.db.users.update_one({USER_ID: user_id}, {'$set': {**user}}, upsert=True)
-        self.db.snapshots.update_one({USER_ID: user_id, TIMESTAMP: timestamp},
-                                     {'$set': {topic: data}}, upsert=True)
+        self.db.snapshots.update_one({USER_ID: user_id, TIMESTAMP: data[TIMESTAMP]},
+                                     {'$set': {topic: data[DATA]}}, upsert=True)

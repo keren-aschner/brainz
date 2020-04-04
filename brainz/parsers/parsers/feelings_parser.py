@@ -7,7 +7,7 @@ def parse_feelings(message: bytes) -> bytes:
     Extract the feelings from each snapshot.
     """
     context = Context(message)
-    return context.serialize({FEELINGS: context.snapshot[FEELINGS]})
+    return context.serialize(context.snapshot[FEELINGS])
 
 
 parse_feelings.fields = [FEELINGS]

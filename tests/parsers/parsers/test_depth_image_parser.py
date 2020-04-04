@@ -31,7 +31,7 @@ def test_parser():
 
     assert result[USER] == _USER
     assert result[TIMESTAMP] == _TIMESTAMP.timestamp()
-    assert result['path'] == str(depth_image_path.absolute())
+    assert result[DATA]['path'] == str(depth_image_path.absolute())
     assert depth_image_path.read_bytes() == _DATA
 
     os.remove(depth_image_path)

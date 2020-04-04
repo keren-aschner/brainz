@@ -7,7 +7,7 @@ def parse_pose(message: bytes) -> bytes:
     Extract the pose from each snapshot.
     """
     context = Context(message)
-    return context.serialize({POSE: context.snapshot[POSE]})
+    return context.serialize(context.snapshot[POSE])
 
 
 parse_pose.fields = [POSE]
