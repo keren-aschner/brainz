@@ -17,7 +17,7 @@ _SERVER_PORT = 5000
 
 _CONFIG = {TIMESTAMP, POSE}
 
-_USER = {USER_ID: '1', USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
+_USER = {USER_ID: 1, USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          GENDER: 'FEMALE'}
 _TIMESTAMP = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
 _SNAPSHOT = {TIMESTAMP: _TIMESTAMP.timestamp() * 1000, POSE: {TRANSLATION: {'x': 0.487, 'y': 0.009, 'z': -1.13},

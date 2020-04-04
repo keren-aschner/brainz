@@ -26,7 +26,7 @@ class Context:
         """
         Create the path for the given filename.
         """
-        dir_path = self.BASE_DIR / self.user[USER_ID] / self.timestamp_str
+        dir_path = self.BASE_DIR / str(self.user[USER_ID]) / self.timestamp_str
         os.makedirs(dir_path, exist_ok=True)
         return dir_path / filename
 

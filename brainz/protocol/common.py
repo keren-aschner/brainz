@@ -13,7 +13,7 @@ def serialize_bin_data(directory: str, user: dict, snapshot: dict) -> dict:
     :param snapshot: The snapshot to serialize.
     :return: The serialized message.
     """
-    path = Path('/opt/brainz') / directory / user[USER_ID] / str(snapshot[TIMESTAMP])
+    path = Path('/opt/brainz') / directory / str(user[USER_ID]) / str(snapshot[TIMESTAMP])
     os.makedirs(path, exist_ok=True)
     if COLOR_IMAGE in snapshot:
         path = path / f'{COLOR_IMAGE}_data.bin'

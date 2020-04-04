@@ -1,4 +1,5 @@
 from .mind import SampleParser, BinaryParser, ProtobufParser, ParsingError
+from ..protocol.fields import USER_ID
 
 
 def _get_parser(protobuf: bool) -> SampleParser:
@@ -28,6 +29,8 @@ class Reader:
         with self.parser.open(file_path, 'rb') as f:
             self.user = self.parser.parse_user(f)
             self.pos = f.tell()
+
+        self.user[USER_ID] = int(self.user[USER_ID])
 
     def __iter__(self):
         """

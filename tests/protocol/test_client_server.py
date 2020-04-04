@@ -10,7 +10,7 @@ RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'pro
 with open(RESOURCES / 'snapshot.bson', 'r') as f:
     _SNAPSHOT = loads(f.read())
 
-_USER = {USER_ID: '42', USERNAME: 'Dan Gittik', BIRTHDAY: 699746400, GENDER: 'MALE'}
+_USER = {USER_ID: 42, USERNAME: 'Dan Gittik', BIRTHDAY: 699746400, GENDER: 'MALE'}
 
 
 def test_serialize_deserialize():

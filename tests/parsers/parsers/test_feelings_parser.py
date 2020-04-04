@@ -5,7 +5,7 @@ from brainz.protocol.fields import *
 from brainz.protocol.parsers_saver import deserialize
 from brainz.protocol.server_parsers import serialize
 
-_USER = {USER_ID: '1', USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
+_USER = {USER_ID: 1, USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          GENDER: 'f'}
 _FEELINGS = {HUNGER: -0.5, HAPPINESS: 0.99, EXHAUSTION: 0.0, THIRST: 0.1}
 _TIMESTAMP = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)

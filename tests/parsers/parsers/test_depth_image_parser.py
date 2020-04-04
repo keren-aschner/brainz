@@ -10,7 +10,7 @@ from brainz.protocol.parsers_saver import deserialize
 from brainz.protocol.server_parsers import serialize
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'parsers' / 'parsers'
-_USER = {USER_ID: '1', USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
+_USER = {USER_ID: 1, USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          GENDER: 'f'}
 _TIMESTAMP = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
 
@@ -38,4 +38,4 @@ def test_parser():
 
 
 def _get_path(data_dir, user, timestamp):
-    return data_dir / user[USER_ID] / f'{timestamp:%Y-%m-%d_%H-%M-%S-%f}/depth_image.jpg'
+    return data_dir / str(user[USER_ID]) / f'{timestamp:%Y-%m-%d_%H-%M-%S-%f}/depth_image.jpg'

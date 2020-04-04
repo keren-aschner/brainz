@@ -11,7 +11,7 @@ BIN_SAMPLE = RESOURCES / 'sample.mind'
 with open(RESOURCES / 'snapshot.bson', 'r') as f:
     _SNAPSHOT = loads(f.read())
 
-_USER = {USER_ID: '42', USERNAME: 'Dan Gittik', BIRTHDAY: 699746400, GENDER: 'MALE'}
+_USER = {USER_ID: 42, USERNAME: 'Dan Gittik', BIRTHDAY: 699746400, GENDER: 'MALE'}
 
 _SERVER_HOST = '127.0.0.1'
 _SERVER_PORT = 5000

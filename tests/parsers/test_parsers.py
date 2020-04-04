@@ -8,7 +8,7 @@ from brainz.protocol.parsers_saver import deserialize
 from brainz.protocol.server_parsers import serialize
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'parsers'
-_USER = {USER_ID: '1', USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
+_USER = {USER_ID: 1, USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
          GENDER: 'f'}
 _POSE = {TRANSLATION: {'x': 0.487, 'y': 0.009, 'z': -1.13},
          ROTATION: {'x': 0.487, 'y': 0.009, 'z': -1.13, 'w': 2.5}}
