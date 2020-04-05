@@ -1,15 +1,14 @@
-import multiprocessing
+import json
 import os
 import pathlib
 import time
 from datetime import datetime, timezone
 
 import pytest
-import requests
 from bson.json_util import dumps
 
 from brainz.protocol.fields import *
-from brainz.server.server import run_server
+from brainz.server.server import get_app
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / 'resources' / 'server'
 _SERVER_HOST = '127.0.0.1'
@@ -25,49 +24,31 @@ _SNAPSHOT = {TIMESTAMP: _TIMESTAMP.timestamp() * 1000, POSE: {TRANSLATION: {'x':
 
 
 @pytest.fixture
-def data_dir(tmp_path):
+def client(tmp_path):
+    def publish_message(message):
+        with open(tmp_path / 'file', 'w') as f:
+            f.write(message)
+
     cwd = os.getcwd()
-    parent, child = multiprocessing.Pipe()
-    process = multiprocessing.Process(target=_run_server, args=(child, tmp_path))
-    process.start()
-    parent.recv()
-    try:
-        yield tmp_path
-    finally:
-        os.chdir(cwd)
-        process.terminate()
-        process.join()
+
+    os.chdir(RESOURCES)
+    app = get_app(publish_message)
+    with app.test_client() as client:
+        yield client, tmp_path
+
+    os.chdir(cwd)
 
 
-def test_config(data_dir):
-    time.sleep(0.5)
-    config = requests.get(f'http://{_SERVER_HOST}:{_SERVER_PORT}/config').json()['config']
+def test_config(client):
+    client, _ = client
+    config = client.get('/config').json['config']
     assert set(config) == _CONFIG
 
 
-def test_snapshot(data_dir):
+def test_snapshot(client):
+    client, data_dir = client
     time.sleep(0.5)
-    response = requests.post(f'http://{_SERVER_HOST}:{_SERVER_PORT}/snapshot',
-                             data=dumps({USER: _USER, 'snapshot': _SNAPSHOT}))
-    assert response.status_code == 201
+    response = client.post('/snapshot', data=dumps({USER: _USER, SNAPSHOT: _SNAPSHOT}))
+    assert response.status_code == 200
     f = data_dir / 'file'
-    assert f.read_text() == 'publish called'
-
-
-def publish(path):
-    def publish_message(message):
-        with open(path / 'file', 'w') as f:
-            f.write('publish called')
-
-    return publish_message
-
-
-def _run_server(pipe, data_dir):
-    os.chdir(RESOURCES)
-    pipe.send('ready')
-    run_server(_SERVER_HOST, _SERVER_PORT, publish(data_dir))
-
-
-def _get_paths(data_dir, timestamp):
-    directory = data_dir / f'1/{timestamp:%Y-%m-%d_%H-%M-%S-%f}'
-    return directory / 'pose.json'
+    assert f.read_text() == json.dumps({USER: _USER, SNAPSHOT: _SNAPSHOT})

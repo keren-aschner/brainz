@@ -23,33 +23,45 @@ def run_server(host: str, port: int, publish: Callable[[bytes], None]) -> None:
     :param port: The server's port.
     :param publish: The publish method to use.
     """
-    fields = get_all_fields()
-
-    class Config(Resource):
-        """
-         Return the server's required fields using GET method.
-        """
-
-        def get(self) -> Dict[str, List[str]]:
-            logger.info('Sending config specification')
-            return {'config': fields}
-
-    class Snapshot(Resource):
-        """
-        Accept a message using POST method and publish it.
-        """
-
-        def post(self):
-            client_server_serialized = request.get_data()
-            server_parsers_serialized = serialize(*deserialize(client_server_serialized))
-            publish(server_parsers_serialized)
-            logger.info('Published message')
-            return {}, 201
-
-    app = Flask(__name__)
-
-    api = Api(app)
-    api.add_resource(Config, '/config')
-    api.add_resource(Snapshot, '/snapshot')
-
+    app = get_app(publish)
     app.run(host=host, port=port)
+
+
+class Config(Resource):
+    """
+     Return the server's required fields using GET method.
+    """
+
+    def __init__(self, parsers_fields):
+        self.fields = parsers_fields
+
+    def get(self) -> Dict[str, List[str]]:
+        logger.info('Sending config specification')
+        return {'config': self.fields}
+
+
+class Snapshot(Resource):
+    """
+    Accept a message using POST method and publish it.
+    """
+
+    def __init__(self, publish_method):
+        self.publish = publish_method
+
+    def post(self):
+        client_server_serialized = request.get_data()
+        server_parsers_serialized = serialize(*deserialize(client_server_serialized))
+        self.publish(server_parsers_serialized)
+        logger.info('Published message')
+        return {}, 200
+
+
+def get_app(publish: Callable[[bytes], None]) -> Flask:
+    """
+    Get the server's flask app.
+    """
+    app = Flask(__name__)
+    api = Api(app)
+    api.add_resource(Config, '/config', resource_class_args=(get_all_fields(),))
+    api.add_resource(Snapshot, '/snapshot', resource_class_args=(publish,))
+    return app
