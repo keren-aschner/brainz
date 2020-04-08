@@ -5,7 +5,7 @@ from bson import ObjectId
 from flask import send_file
 from flask_restful import Resource, abort
 
-from ..protocol.fields import USER_ID, USERNAME, TIMESTAMP, COLOR_IMAGE, DEPTH_IMAGE
+from ..protocol.fields import USER_ID, USERNAME, TIMESTAMP, COLOR_IMAGE, DEPTH_IMAGE, FEELINGS
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
@@ -27,7 +27,7 @@ class Users(ApiResource):
         """
          Return the user ids and names from the db.
         """
-        return [{user[USER_ID]: user[USERNAME]} for user in self.db.users.find()]
+        return [{USER_ID: user[USER_ID], USERNAME: user[USERNAME]} for user in self.db.users.find()]
 
 
 class User(ApiResource):
@@ -45,7 +45,18 @@ class Snapshots(ApiResource):
         """
          Return the snapshot ids and timestamps for a specific user.
         """
-        return [{str(snapshot[ID]): snapshot[TIMESTAMP]} for snapshot in self.db.snapshots.find({USER_ID: user_id})]
+        return [{SNAPSHOT_ID: str(snapshot[ID]), TIMESTAMP: snapshot[TIMESTAMP]} for snapshot in
+                self.db.snapshots.find({USER_ID: user_id})]
+
+
+class Feelings(ApiResource):
+
+    def get(self, user_id):
+        """
+        Return the user's feelings over time.
+        """
+        return [{TIMESTAMP: snapshot[TIMESTAMP], FEELINGS: snapshot[FEELINGS]} for snapshot in
+                self.db.snapshots.find({USER_ID: user_id})]
 
 
 class Snapshot(ApiResource):

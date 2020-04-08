@@ -5,7 +5,7 @@ from flask_restful import Api
 from furl import furl
 from pymongo import MongoClient
 
-from .resources import Users, User, Snapshots, Snapshot, Result, ResultData
+from .resources import Users, User, Snapshots, Feelings, Snapshot, Result, ResultData
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
@@ -34,6 +34,7 @@ def run_api_server(host: str, port: int, database_url: str):
     api.add_resource(Users, '/users', resource_class_args=(db,))
     api.add_resource(User, '/users/<int:user_id>', resource_class_args=(db,))
     api.add_resource(Snapshots, '/users/<int:user_id>/snapshots', resource_class_args=(db,))
+    api.add_resource(Feelings, '/users/<int:user_id>/feelings', resource_class_args=(db,))
     api.add_resource(Snapshot, '/users/<int:user_id>/snapshots/<string:snapshot_id>', resource_class_args=(db,))
     api.add_resource(Result, '/users/<int:user_id>/snapshots/<string:snapshot_id>/<string:result_name>',
                      resource_class_args=(db,))
