@@ -8,7 +8,13 @@ class UserCard extends React.Component {
     constructor(props) {
         super(props);
         this.changeTimestamp = this.changeTimestamp.bind(this);
-        this.state = {snapshot: null};
+        this.state = {snapshot: null, feelings: []};
+    }
+
+    componentDidMount() {
+        fetch("/users/" + this.props.user_id + "/feelings")
+            .then(response => response.json())
+            .then(data => this.setState({feelings: data}));
     }
 
     changeTimestamp(e) {
@@ -16,19 +22,10 @@ class UserCard extends React.Component {
     }
 
     render() {
-        const feelings = [
-            {
-                id: 1, timestamp: 1575446887.339, feelings: {hunger: -1, thirst: -0.5, exhaustion: 0, happiness: 0}
-            }, {
-                id: 2, timestamp: 1575446890.339, feelings: {hunger: 0.5, thirst: 0.2, exhaustion: -0.5, happiness: 0.1}
-            }, {
-                id: 3, timestamp: 1575446892.2, feelings: {hunger: 0.5, thirst: 0.35, exhaustion: 0.1, happiness: 0.75}
-            },
-            {
-                id: 4, timestamp: 1575446892.9, feelings: {hunger: 0.7, thirst: 0.37, exhaustion: 0.5, happiness: 1}
-            }];
+        let feelings = this.state.feelings;
 
-        const options = {
+        const feelingsOptions = {
+            theme: "light2",
             animationEnabled: true,
             title: {
                 text: "Feelings over time"
@@ -52,7 +49,7 @@ class UserCard extends React.Component {
                     showInLegend: true,
                     dataPoints: feelings.map((snapshot) => {
                             return {
-                                id: snapshot.id,
+                                id: snapshot.snapshot_id,
                                 x: new Date(snapshot.timestamp * 1000),
                                 y: snapshot.feelings.hunger
                             }
@@ -67,7 +64,7 @@ class UserCard extends React.Component {
                     showInLegend: true,
                     dataPoints: feelings.map((snapshot) => {
                             return {
-                                id: snapshot.id,
+                                id: snapshot.snapshot_id,
                                 x: new Date(snapshot.timestamp * 1000),
                                 y: snapshot.feelings.thirst
                             }
@@ -82,7 +79,7 @@ class UserCard extends React.Component {
                     showInLegend: true,
                     dataPoints: feelings.map((snapshot) => {
                             return {
-                                id: snapshot.id,
+                                id: snapshot.snapshot_id,
                                 x: new Date(snapshot.timestamp * 1000),
                                 y: snapshot.feelings.exhaustion
                             }
@@ -97,7 +94,7 @@ class UserCard extends React.Component {
                     showInLegend: true,
                     dataPoints: feelings.map((snapshot) => {
                             return {
-                                id: snapshot.id,
+                                id: snapshot.snapshot_id,
                                 x: new Date(snapshot.timestamp * 1000),
                                 y: snapshot.feelings.happiness
                             }
@@ -107,7 +104,7 @@ class UserCard extends React.Component {
         };
         return (
             <div>
-                <CanvasJSChart options={options}/>
+                <CanvasJSChart options={feelingsOptions}/>
             </div>
         );
     }

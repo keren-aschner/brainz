@@ -4,13 +4,20 @@ import Card from 'react-bootstrap/Card';
 
 
 class UserCard extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {user: {}}
+    }
+
+    componentDidMount() {
+        fetch("/users/" + this.props.user_id)
+            .then(response => response.json())
+            .then(data => this.setState({user: data}));
+    }
+
     render() {
-        let user;
-        if (this.props.user_id === 1) {
-            user = {user_id: 1, username: "Keren Solodkin", birthday: 856828800.0, gender: 'f'};
-        } else {
-            user = {user_id: 2, username: "Bar Aschner", birthday: 864259200.0, gender: 'm'};
-        }
+        let user = this.state.user;
 
         return (
             <div>

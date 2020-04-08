@@ -9,7 +9,13 @@ class App extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {user: null};
+        this.state = {user: null, users: []};
+    }
+
+    componentDidMount() {
+        fetch("/users")
+            .then(response => response.json())
+            .then(data => this.setState({users: data}));
     }
 
     viewUser(userId) {
@@ -17,7 +23,7 @@ class App extends React.Component {
     }
 
     render() {
-        const users = [{user_id: 1, username: "Keren"}, {user_id: 2, username: "Bar"}];
+        let users = this.state.users;
         let pageData;
         if (this.state.user == null) {
             pageData =

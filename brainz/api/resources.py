@@ -55,8 +55,8 @@ class Feelings(ApiResource):
         """
         Return the user's feelings over time.
         """
-        return [{TIMESTAMP: snapshot[TIMESTAMP], FEELINGS: snapshot[FEELINGS]} for snapshot in
-                self.db.snapshots.find({USER_ID: user_id})]
+        return [{SNAPSHOT_ID: str(snapshot[ID]), TIMESTAMP: snapshot[TIMESTAMP], FEELINGS: snapshot[FEELINGS]} for
+                snapshot in self.db.snapshots.find({USER_ID: user_id})]
 
 
 class Snapshot(ApiResource):
