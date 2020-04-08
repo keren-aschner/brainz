@@ -102,9 +102,19 @@ class UserCard extends React.Component {
                     )
                 }]
         };
+
+        let image;
+        if (this.state.snapshot !== null) {
+            image = <img alt="" height="450px"
+                         src={"/users/" + this.props.user_id + "/snapshots/" + this.state.snapshot + "/color_image/data"}/>;
+        } else {
+            image = <div/>
+        }
+
         return (
             <div>
                 <CanvasJSChart options={feelingsOptions}/>
+                {image}
             </div>
         );
     }
