@@ -6,19 +6,19 @@ import Card from 'react-bootstrap/Card';
 class UserCard extends React.Component {
     render() {
         let user;
-        if (this.props.id === 1) {
-            user = {id: 1, name: "Keren Solodkin", birthday: 856828800.0, gender: 'f'};
+        if (this.props.user_id === 1) {
+            user = {user_id: 1, username: "Keren Solodkin", birthday: 856828800.0, gender: 'f'};
         } else {
-            user = {id: 2, name: "Bar Aschner", birthday: 864259200.0, gender: 'm'};
+            user = {user_id: 2, username: "Bar Aschner", birthday: 864259200.0, gender: 'm'};
         }
 
         return (
             <div>
                 <Card style={{width: '18rem'}}>
                     <Card.Body>
-                        <Card.Title>{user.name}</Card.Title>
+                        <Card.Title>{user.username}</Card.Title>
                         <Card.Text>
-                            ID: {user.id}<br/>
+                            ID: {user.user_id}<br/>
                             Birthday: {new Date(user.birthday * 1000).toDateString()}<br/>
                             Gender: {user.gender === 'f' ? 'Female' : 'Male'}
                         </Card.Text>

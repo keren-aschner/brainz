@@ -5,53 +5,109 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 
 class UserCard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.changeTimestamp = this.changeTimestamp.bind(this);
+        this.state = {snapshot: null};
+    }
+
+    changeTimestamp(e) {
+        this.setState({snapshot: e.dataPoint.id});
+    }
+
     render() {
-        let user;
-        if (this.props.id === 1) {
-            user = {id: 1, name: "Keren Solodkin", birthday: 856828800.0, gender: 'f'};
-        } else {
-            user = {id: 2, name: "Bar Aschner", birthday: 864259200.0, gender: 'm'};
-        }
+        const feelings = [
+            {
+                id: 1, timestamp: 1575446887.339, feelings: {hunger: -1, thirst: -0.5, exhaustion: 0, happiness: 0}
+            }, {
+                id: 2, timestamp: 1575446890.339, feelings: {hunger: 0.5, thirst: 0.2, exhaustion: -0.5, happiness: 0.1}
+            }, {
+                id: 3, timestamp: 1575446892.2, feelings: {hunger: 0.5, thirst: 0.35, exhaustion: 0.1, happiness: 0.75}
+            },
+            {
+                id: 4, timestamp: 1575446892.9, feelings: {hunger: 0.7, thirst: 0.37, exhaustion: 0.5, happiness: 1}
+            }];
 
         const options = {
             animationEnabled: true,
             title: {
-                text: "Monthly Sales - 2017"
-            },
-            axisX: {
-                valueFormatString: "MMM"
+                text: "Feelings over time"
             },
             axisY: {
-                title: "Sales (in USD)",
-                prefix: "$",
-                includeZero: false
+                title: "Feelings",
             },
-            data: [{
-                yValueFormatString: "$#,###",
-                xValueFormatString: "MMMM",
-                type: "spline",
-                dataPoints: [
-                    {x: new Date(2017, 0), y: 25060},
-                    {x: new Date(2017, 1), y: 27980},
-                    {x: new Date(2017, 2), y: 42800},
-                    {x: new Date(2017, 3), y: 32400},
-                    {x: new Date(2017, 4), y: 35260},
-                    {x: new Date(2017, 5), y: 33900},
-                    {x: new Date(2017, 6), y: 40000},
-                    {x: new Date(2017, 7), y: 52500},
-                    {x: new Date(2017, 8), y: 32300},
-                    {x: new Date(2017, 9), y: 42000},
-                    {x: new Date(2017, 10), y: 37160},
-                    {x: new Date(2017, 11), y: 38400}
-                ]
-            }]
+            axisX: {
+                title: "timestamp",
+                valueFormatString: "D MMM HH:mm:ss.f",
+            },
+            toolTip: {
+                shared: true
+            },
+            data: [
+                {
+                    type: "spline",
+                    name: "hunger",
+                    mousemove: this.changeTimestamp,
+                    xValueFormatString: "DD.MM.YY HH:mm:ss.fff",
+                    showInLegend: true,
+                    dataPoints: feelings.map((snapshot) => {
+                            return {
+                                id: snapshot.id,
+                                x: new Date(snapshot.timestamp * 1000),
+                                y: snapshot.feelings.hunger
+                            }
+                        }
+                    )
+                },
+                {
+                    type: "spline",
+                    name: "thirst",
+                    mousemove: this.changeTimestamp,
+                    xValueFormatString: "DD.MM.YY HH:mm:ss.fff",
+                    showInLegend: true,
+                    dataPoints: feelings.map((snapshot) => {
+                            return {
+                                id: snapshot.id,
+                                x: new Date(snapshot.timestamp * 1000),
+                                y: snapshot.feelings.thirst
+                            }
+                        }
+                    )
+                },
+                {
+                    type: "spline",
+                    name: "exhaustion",
+                    mousemove: this.changeTimestamp,
+                    xValueFormatString: "DD.MM.YY HH:mm:ss.fff",
+                    showInLegend: true,
+                    dataPoints: feelings.map((snapshot) => {
+                            return {
+                                id: snapshot.id,
+                                x: new Date(snapshot.timestamp * 1000),
+                                y: snapshot.feelings.exhaustion
+                            }
+                        }
+                    )
+                },
+                {
+                    type: "spline",
+                    name: "happiness",
+                    mousemove: this.changeTimestamp,
+                    xValueFormatString: "DD.MM.YY HH:mm:ss.fff",
+                    showInLegend: true,
+                    dataPoints: feelings.map((snapshot) => {
+                            return {
+                                id: snapshot.id,
+                                x: new Date(snapshot.timestamp * 1000),
+                                y: snapshot.feelings.happiness
+                            }
+                        }
+                    )
+                }]
         };
         return (
             <div>
-                <CanvasJSChart options={options}
-                    /* onRef={ref => this.chart = ref} */
-                />
-                {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
+                <CanvasJSChart options={options}/>
             </div>
         );
     }

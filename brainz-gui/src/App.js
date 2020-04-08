@@ -17,16 +17,17 @@ class App extends React.Component {
     }
 
     render() {
-        const users = [{id: 1, name: "Keren"}, {id: 2, name: "Bar"}];
+        const users = [{user_id: 1, username: "Keren"}, {user_id: 2, username: "Bar"}];
         let pageData;
         if (this.state.user == null) {
             pageData =
                 <CardDeck>
                     {users.map((user) =>
-                        <UserCard key={user.id} id={user.id} onClick={this.viewUser.bind(this, user.id)}/>)}
+                        <UserCard key={user.user_id} user_id={user.user_id}
+                                  onClick={this.viewUser.bind(this, user.user_id)}/>)}
                 </CardDeck>;
         } else {
-            pageData = <User id={this.state.user}/>
+            pageData = <User user_id={this.state.user}/>
         }
         return (
             <div>
