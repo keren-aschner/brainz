@@ -1,5 +1,6 @@
 import React from 'react';
 import CanvasJSReact from "./canvasjs/canvasjs.react";
+import Button from "react-bootstrap/Button";
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -8,7 +9,8 @@ class UserCard extends React.Component {
     constructor(props) {
         super(props);
         this.changeTimestamp = this.changeTimestamp.bind(this);
-        this.state = {snapshot: null, feelings: []};
+        this.playImages = this.playImages.bind(this);
+        this.state = {snapshot: null, snapshot_id: null, playing: false, feelings: [], snapshots: []};
     }
 
     componentDidMount() {
@@ -18,7 +20,40 @@ class UserCard extends React.Component {
     }
 
     changeTimestamp(e) {
-        this.setState({snapshot: e.dataPoint.id});
+        if (!this.state.playing) {
+            this.setState({snapshot_id: e.dataPoint.id});
+        }
+    }
+
+    playImages(e) {
+        fetch("/users/" + this.props.user_id + "/snapshots")
+            .then(response => response.json())
+            .then(data => this.setState({snapshots: data}));
+
+        this.setState({
+            snapshot: 0,
+            playing: true
+        });
+        this.timerID = setInterval(
+            () => this.tick(),
+            250
+        );
+    }
+
+    tick() {
+        let snapshotsSize = this.state.snapshots.length - 1;
+        if (this.state.snapshot === snapshotsSize) {
+            clearInterval(this.timerID);
+            this.setState({playing: false});
+            return;
+        }
+
+        this.setState(state => ({
+            snapshot: state.snapshot + 1,
+        }));
+        this.setState(state => ({
+            snapshot_id: state.snapshots[state.snapshot].snapshot_id
+        }));
     }
 
     render() {
@@ -104,15 +139,16 @@ class UserCard extends React.Component {
         };
 
         let image;
-        if (this.state.snapshot !== null) {
-            image = <img alt="" height="450px"
-                         src={"/users/" + this.props.user_id + "/snapshots/" + this.state.snapshot + "/color_image/data"}/>;
+        if (this.state.snapshot_id !== null) {
+            image = <img alt="" height="400px"
+                         src={"/users/" + this.props.user_id + "/snapshots/" + this.state.snapshot_id + "/color_image/data"}/>;
         } else {
             image = <div/>
         }
 
         return (
             <div>
+                <Button onClick={this.playImages}>Play all Images</Button>
                 <CanvasJSChart options={feelingsOptions}/>
                 {image}
             </div>
