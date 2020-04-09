@@ -1,58 +1,112 @@
 import React from 'react';
 import CanvasJSReact from "./canvasjs/canvasjs.react";
-import Button from "react-bootstrap/Button";
+import {Button, Card, Col, Row} from 'antd';
+import {PauseCircleOutlined, PlayCircleOutlined, StepBackwardOutlined} from '@ant-design/icons'
+import {format} from "date-fns";
 
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+let CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 
-class UserCard extends React.Component {
+class User extends React.Component {
     constructor(props) {
         super(props);
-        this.changeTimestamp = this.changeTimestamp.bind(this);
+        this.changeImage = this.changeImage.bind(this);
+        this.restartImages = this.restartImages.bind(this);
         this.playImages = this.playImages.bind(this);
-        this.state = {snapshot: null, snapshot_id: null, playing: false, feelings: [], snapshots: []};
+        this.stopImages = this.stopImages.bind(this);
+        this.state = {snapshot: 0, snapshot_id: null, snapshot_date: null, playing: false, feelings: [], snapshots: []};
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        return {user_id: props.user_id};
     }
 
     componentDidMount() {
-        fetch("/users/" + this.props.user_id + "/feelings")
-            .then(response => response.json())
-            .then(data => this.setState({feelings: data}));
+        this.fetch_user_data(this.state.user_id);
     }
 
-    changeTimestamp(e) {
-        if (!this.state.playing) {
-            this.setState({snapshot_id: e.dataPoint.id});
+    getSnapshotBeforeUpdate(prevProps, prevState) {
+        this.prev_user = prevState.user_id;
+    }
+
+    componentDidUpdate() {
+        let user_id = this.state.user_id;
+
+        if (this.prev_user !== user_id) {
+            clearInterval(this.timerID);
+            this.fetch_user_data(user_id);
+            this.setState({
+                snapshot: 0,
+                snapshot_id: null,
+                snapshot_date: null,
+                playing: false
+            });
         }
     }
 
-    playImages(e) {
-        fetch("/users/" + this.props.user_id + "/snapshots")
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
+
+    fetch_user_data(user_id) {
+        fetch("/users/" + user_id + "/feelings")
+            .then(response => response.json())
+            .then(data => this.setState({feelings: data}));
+
+        fetch("/users/" + user_id + "/snapshots")
             .then(response => response.json())
             .then(data => this.setState({snapshots: data}));
+    }
 
-        this.setState({
+    changeImage(e) {
+        if (!this.state.playing) {
+            this.setState({
+                snapshot_id: e.dataPoint.id,
+                snapshot_date: e.dataPoint.x
+            });
+        }
+    }
+
+    restartImages(e) {
+        this.setState(state => ({
             snapshot: 0,
-            playing: true
-        });
-        this.timerID = setInterval(
-            () => this.tick(),
-            250
-        );
+            snapshot_id: state.snapshots[0].snapshot_id,
+            snapshot_date: new Date(state.snapshots[0].timestamp * 1000)
+        }));
+    }
+
+    playImages(e) {
+        if (!this.state.playing) {
+            this.setState({
+                playing: true
+            });
+            this.timerID = setInterval(
+                () => this.tick(),
+                250
+            );
+        }
+    }
+
+    stopImages(e) {
+        clearInterval(this.timerID);
+        this.setState({playing: false});
     }
 
     tick() {
         let snapshotsSize = this.state.snapshots.length - 1;
         if (this.state.snapshot === snapshotsSize) {
             clearInterval(this.timerID);
-            this.setState({playing: false});
+            this.setState({
+                snapshot: 0,
+                playing: false
+            });
             return;
         }
 
         this.setState(state => ({
             snapshot: state.snapshot + 1,
-        }));
-        this.setState(state => ({
-            snapshot_id: state.snapshots[state.snapshot].snapshot_id
+            snapshot_id: state.snapshots[state.snapshot + 1].snapshot_id,
+            snapshot_date: new Date(state.snapshots[state.snapshot + 1].timestamp * 1000)
         }));
     }
 
@@ -61,6 +115,9 @@ class UserCard extends React.Component {
 
         const feelingsOptions = {
             theme: "light2",
+            backgroundColor: "#f5f5f5",
+            height: 500,
+            zoomEnabled: true,
             animationEnabled: true,
             title: {
                 text: "Feelings over time"
@@ -70,7 +127,8 @@ class UserCard extends React.Component {
             },
             axisX: {
                 title: "timestamp",
-                valueFormatString: "D MMM HH:mm:ss.f",
+                valueFormatString: "DD.MM.YY HH:mm:ss",
+                labelFontSize: 14
             },
             toolTip: {
                 shared: true
@@ -79,7 +137,7 @@ class UserCard extends React.Component {
                 {
                     type: "spline",
                     name: "hunger",
-                    mousemove: this.changeTimestamp,
+                    mousemove: this.changeImage,
                     xValueFormatString: "DD.MM.YY HH:mm:ss.fff",
                     showInLegend: true,
                     dataPoints: feelings.map((snapshot) => {
@@ -94,7 +152,7 @@ class UserCard extends React.Component {
                 {
                     type: "spline",
                     name: "thirst",
-                    mousemove: this.changeTimestamp,
+                    mousemove: this.changeImage,
                     xValueFormatString: "DD.MM.YY HH:mm:ss.fff",
                     showInLegend: true,
                     dataPoints: feelings.map((snapshot) => {
@@ -109,7 +167,7 @@ class UserCard extends React.Component {
                 {
                     type: "spline",
                     name: "exhaustion",
-                    mousemove: this.changeTimestamp,
+                    mousemove: this.changeImage,
                     xValueFormatString: "DD.MM.YY HH:mm:ss.fff",
                     showInLegend: true,
                     dataPoints: feelings.map((snapshot) => {
@@ -124,7 +182,7 @@ class UserCard extends React.Component {
                 {
                     type: "spline",
                     name: "happiness",
-                    mousemove: this.changeTimestamp,
+                    mousemove: this.changeImage,
                     xValueFormatString: "DD.MM.YY HH:mm:ss.fff",
                     showInLegend: true,
                     dataPoints: feelings.map((snapshot) => {
@@ -139,21 +197,47 @@ class UserCard extends React.Component {
         };
 
         let image;
+        let date;
         if (this.state.snapshot_id !== null) {
-            image = <img alt="" height="400px"
-                         src={"/users/" + this.props.user_id + "/snapshots/" + this.state.snapshot_id + "/color_image/data"}/>;
+            date = format(this.state.snapshot_date, "dd.MM.yy HH:mm:ss");
+            image = <img
+                alt="" style={{maxWidth: "100%", marginTop: 80}}
+                src={"/users/" + this.state.user_id + "/snapshots/" + this.state.snapshot_id + "/color_image/data"}
+            />
         } else {
-            image = <div/>
+            date = <div/>
+            image = <span style={{height: 330}}/>
         }
 
         return (
             <div>
-                <Button onClick={this.playImages}>Play all Images</Button>
-                <CanvasJSChart options={feelingsOptions}/>
-                {image}
+                <Row style={{margin: 40}}>
+                    <Col span={1}/>
+                    <Col span={15}>
+                        <CanvasJSChart options={feelingsOptions}/>
+                    </Col>
+                    <Col span={1}/>
+                    <Col span={6}>
+                        <Card style={{background: '#fafafa'}}
+                              actions={[
+                                  <Button style={{margin: 16}} type="link" onClick={this.restartImages}>
+                                      <StepBackwardOutlined style={{fontSize: 25}}/>
+                                  </Button>,
+                                  <Button style={{margin: 16}} type="link" onClick={this.playImages}>
+                                      <PlayCircleOutlined style={{fontSize: 25}}/>
+                                  </Button>,
+                                  <Button style={{margin: 16}} type="link" onClick={this.stopImages}>
+                                      <PauseCircleOutlined style={{fontSize: 25}}/>
+                                  </Button>]}
+                              cover={image}>
+                            <Card.Meta description={date} style={{textAlign: 'center'}}/>
+                        </Card>
+                    </Col>
+                    <Col span={1}/>
+                </Row>
             </div>
         );
     }
 }
 
-export default UserCard;
+export default User;

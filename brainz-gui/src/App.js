@@ -1,9 +1,9 @@
 import React from 'react';
 import logo from './brainz.png';
-import Navbar from 'react-bootstrap/Navbar';
 import UserCard from "./UserCard";
 import CardDeck from 'react-bootstrap/CardDeck'
 import User from "./User";
+import {Menu} from 'antd'
 
 class App extends React.Component {
 
@@ -37,12 +37,20 @@ class App extends React.Component {
         }
         return (
             <div>
-                <Navbar bg="light">
-                    <Navbar.Brand onClick={this.viewUser.bind(this, null)}>
-                        <img alt="" src={logo} width="50" height="47" className="d-inline-block align-top"/>{' '}
-                        Brainz
-                    </Navbar.Brand>
-                </Navbar>
+                <Menu style={{height: 75, background: '#fafafa'}} selectedKeys={[]} mode="horizontal">
+                    <Menu.Item disabled>
+                        <img alt="" src={logo} height="60"/>{' '}
+                    </Menu.Item>
+                    <Menu.Item onClick={this.viewUser.bind(this, null)}>
+                        <div style={{fontSize: 30, color: '#273B92'}}>Brainz</div>
+                    </Menu.Item>
+                    <Menu.SubMenu title='Users'>
+                        {users.map((user) =>
+                            <Menu.Item key={user.user_id} onClick={this.viewUser.bind(this, user.user_id)}>
+                                {user.username}
+                            </Menu.Item>)}
+                    </Menu.SubMenu>
+                </Menu>
                 {pageData}
             </div>
         );

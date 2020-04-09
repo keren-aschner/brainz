@@ -1,7 +1,6 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-
+import {Button, Card} from 'antd'
+import {CameraOutlined} from '@ant-design/icons'
 
 class UserCard extends React.Component {
     constructor(props) {
@@ -21,16 +20,12 @@ class UserCard extends React.Component {
 
         return (
             <div>
-                <Card style={{width: '18rem'}}>
-                    <Card.Body>
-                        <Card.Title>{user.username}</Card.Title>
-                        <Card.Text>
-                            ID: {user.user_id}<br/>
-                            Birthday: {new Date(user.birthday * 1000).toDateString()}<br/>
-                            Gender: {user.gender === 'f' ? 'Female' : 'Male'}
-                        </Card.Text>
-                        <Button onClick={this.props.onClick}>See Snapshots</Button>
-                    </Card.Body>
+                <Card style={{margin: 40, width: 300, background: '#fafafa'}} title={user.username} actions={[
+                    <Button type="link" onClick={this.props.onClick}><CameraOutlined/>snapshots</Button>
+                ]}>
+                    <p>ID: {user.user_id}</p>
+                    <p>Birthday: {new Date(user.birthday * 1000).toDateString()}</p>
+                    <p>Gender: {user.gender === 'f' ? 'Female' : 'Male'}</p>
                 </Card>
             </div>
         );
