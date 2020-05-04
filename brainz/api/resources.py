@@ -4,6 +4,9 @@ import logging
 from bson import ObjectId
 from flask import send_file
 from flask_restful import Resource, abort
+from pymongo import ASCENDING
+from pymongo.collection import Collection
+from pymongo.database import Database
 
 from ..protocol.fields import USER_ID, USERNAME, TIMESTAMP, COLOR_IMAGE, DEPTH_IMAGE, FEELINGS
 
@@ -18,8 +21,9 @@ SNAPSHOT_ID = 'snapshot_id'
 
 
 class ApiResource(Resource):
-    def __init__(self, db):
-        self.db = db
+    def __init__(self, db: Database):
+        self.users: Collection = db.users
+        self.snapshots: Collection = db.snapshots
 
 
 class Users(ApiResource):
@@ -27,7 +31,7 @@ class Users(ApiResource):
         """
          Return the user ids and names from the db.
         """
-        return [{USER_ID: user[USER_ID], USERNAME: user[USERNAME]} for user in self.db.users.find()]
+        return list(self.users.find({}, {USER_ID: 1, USERNAME: 1, ID: 0}))
 
 
 class User(ApiResource):
@@ -35,9 +39,7 @@ class User(ApiResource):
         """
          Return the details of the specific user.
         """
-        user = self.db.users.find_one({USER_ID: user_id})
-        del user[ID]
-        return user
+        return self.users.find_one({USER_ID: user_id}, {ID: 0})
 
 
 class Snapshots(ApiResource):
@@ -46,7 +48,7 @@ class Snapshots(ApiResource):
          Return the snapshot ids and timestamps for a specific user.
         """
         return [{SNAPSHOT_ID: str(snapshot[ID]), TIMESTAMP: snapshot[TIMESTAMP]} for snapshot in
-                self.db.snapshots.find({USER_ID: user_id})]
+                self.snapshots.find({USER_ID: user_id}).sort(TIMESTAMP, ASCENDING)]
 
 
 class Feelings(ApiResource):
@@ -56,7 +58,7 @@ class Feelings(ApiResource):
         Return the user's feelings over time.
         """
         return [{SNAPSHOT_ID: str(snapshot[ID]), TIMESTAMP: snapshot[TIMESTAMP], FEELINGS: snapshot[FEELINGS]} for
-                snapshot in self.db.snapshots.find({USER_ID: user_id})]
+                snapshot in self.snapshots.find({USER_ID: user_id})]
 
 
 class Snapshot(ApiResource):
@@ -64,9 +66,7 @@ class Snapshot(ApiResource):
         """
          Return the details of a specific snapshot.
         """
-        snapshot = self.db.snapshots.find_one({USER_ID: user_id, ID: ObjectId(snapshot_id)})
-        del snapshot[USER_ID]
-        del snapshot[ID]
+        snapshot = self.snapshots.find_one({USER_ID: user_id, ID: ObjectId(snapshot_id)}, {USER_ID: 0, ID: 0})
         timestamp = snapshot.pop(TIMESTAMP)
         return {SNAPSHOT_ID: snapshot_id, TIMESTAMP: timestamp, 'fields': list(snapshot.keys())}
 
@@ -76,7 +76,7 @@ class Result(ApiResource):
         """
         Return the specified snapshot's result.
         """
-        snapshot = self.db.snapshots.find_one({USER_ID: user_id, ID: ObjectId(snapshot_id)})
+        snapshot = self.snapshots.find_one({USER_ID: user_id, ID: ObjectId(snapshot_id)})
         return snapshot[result_name]
 
 
@@ -90,6 +90,6 @@ class ResultData(ApiResource):
         if result_name not in [COLOR_IMAGE, DEPTH_IMAGE]:
             abort(404)
 
-        snapshot = self.db.snapshots.find_one({USER_ID: user_id, ID: ObjectId(snapshot_id)})
+        snapshot = self.snapshots.find_one({USER_ID: user_id, ID: ObjectId(snapshot_id)})
         with open(snapshot[result_name]['path'], 'rb') as f:
             return f.read()
