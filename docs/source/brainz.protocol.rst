@@ -28,14 +28,6 @@ brainz.protocol.fields module
    :undoc-members:
    :show-inheritance:
 
-brainz.protocol.mind\_pb2 module
---------------------------------
-
-.. automodule:: brainz.protocol.mind_pb2
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 brainz.protocol.parsers\_saver module
 -------------------------------------
 

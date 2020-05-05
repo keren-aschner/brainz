@@ -12,6 +12,14 @@ brainz.client.mind.binary\_parser module
    :undoc-members:
    :show-inheritance:
 
+brainz.client.mind.mind\_pb2 module
+-----------------------------------
+
+.. automodule:: brainz.client.mind.mind_pb2
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 brainz.client.mind.protobuf\_parser module
 ------------------------------------------
 

@@ -6,9 +6,9 @@ from typing.io import IO
 
 from google.protobuf.json_format import MessageToDict
 
+from .mind_pb2 import User, Snapshot
 from .sample_parser import SampleParser, ParsingError
 from ...protocol.fields import COLOR_IMAGE, DATA
-from ...protocol.mind_pb2 import User, Snapshot
 
 
 class ProtobufParser(SampleParser):
