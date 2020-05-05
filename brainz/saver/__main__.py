@@ -72,7 +72,7 @@ def consume_rmq(host: str, port: int, db_url: str):
     queue_name = channel.queue_declare("", exclusive=True).method.queue
 
     for parser in get_parsers():
-        channel.queue_bind(exchange="parsers_data", queue=queue_name, routing_key=parser.name)  # TODO: routing key # ?
+        channel.queue_bind(exchange="parsers_data", queue=queue_name, routing_key=parser.name)
 
     def callback(ch: Channel, method: Basic.Deliver, properties: BasicProperties, message: bytes) -> None:
         saver.save(method.routing_key, message)
