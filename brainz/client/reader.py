@@ -25,10 +25,8 @@ class Reader:
         :param protobuf: Whether to use a protobuf or binary format.
         """
         self.parser = _get_parser(protobuf)
-        self.file_path = file_path
-        with self.parser.open(file_path, "rb") as f:
-            self.user = self.parser.parse_user(f)
-            self.pos = f.tell()
+        self.file = self.parser.open(file_path, "rb")
+        self.user = self.parser.parse_user(self.file)
 
         self.user[USER_ID] = int(self.user[USER_ID])
 
@@ -37,11 +35,9 @@ class Reader:
         Iterate over and parse the snapshots in the sample file.
         """
         while True:
-            with self.parser.open(self.file_path, "rb") as f:
-                f.seek(self.pos)
-                try:
-                    s = self.parser.parse_snapshot(f)
-                except ParsingError:
-                    break
-                self.pos = f.tell()
+            try:
+                s = self.parser.parse_snapshot(self.file)
+            except ParsingError:
+                self.file.close()
+                break
             yield s
