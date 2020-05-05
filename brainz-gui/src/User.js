@@ -27,6 +27,7 @@ class User extends React.Component {
 
     getSnapshotBeforeUpdate(prevProps, prevState) {
         this.prev_user = prevState.user_id;
+        return null;
     }
 
     componentDidUpdate() {
@@ -49,11 +50,11 @@ class User extends React.Component {
     }
 
     fetch_user_data(user_id) {
-        fetch("/users/" + user_id + "/feelings")
+        fetch(`${window.api_server}/users/${user_id}/feelings`)
             .then(response => response.json())
             .then(data => this.setState({feelings: data}));
 
-        fetch("/users/" + user_id + "/snapshots")
+        fetch(`${window.api_server}/users/${user_id}/snapshots`)
             .then(response => response.json())
             .then(data => this.setState({snapshots: data}));
     }
@@ -202,7 +203,7 @@ class User extends React.Component {
             date = format(this.state.snapshot_date, "dd.MM.yy HH:mm:ss");
             image = <img
                 alt="" style={{maxWidth: "100%", marginTop: 80}}
-                src={"/users/" + this.state.user_id + "/snapshots/" + this.state.snapshot_id + "/color_image/data"}
+                src={`${window.api_server}/users/${this.state.user_id}/snapshots/${this.state.snapshot_id}/color_image/data`}
             />
         } else {
             date = <div/>

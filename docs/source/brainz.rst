@@ -5,15 +5,16 @@ Subpackages
 -----------
 
 .. toctree::
+   :maxdepth: 4
 
    brainz.api
    brainz.cli
    brainz.client
+   brainz.gui
    brainz.parsers
    brainz.protocol
    brainz.saver
    brainz.server
-   brainz.web
 
 Module contents
 ---------------

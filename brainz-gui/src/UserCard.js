@@ -10,7 +10,7 @@ class UserCard extends React.Component {
     }
 
     componentDidMount() {
-        fetch("/users/" + this.props.user_id)
+        fetch(`${window.api_server}/users/${this.props.user_id}`)
             .then(response => response.json())
             .then(data => this.setState({user: data}));
     }

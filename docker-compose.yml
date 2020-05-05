@@ -61,6 +61,16 @@ services:
     depends_on:
       - server
       - mongodb
+  gui-server:
+    image: brainz-gui
+    build:
+      context: .
+      dockerfile: ./brainz-gui/Dockerfile
+    ports:
+      - 8080:8080
+    command: ./wait-for-it.sh api-server:5000 -- python3.8 -m brainz.gui run-server
+    depends_on:
+      - api-server
 
   rabbitmq:
     image: rabbitmq:management

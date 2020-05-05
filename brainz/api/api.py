@@ -1,6 +1,7 @@
 import logging
 
 from flask import Flask
+from flask_cors import CORS
 from flask_restful import Api
 from furl import furl
 from pymongo import MongoClient
@@ -29,6 +30,7 @@ def run_api_server(host: str, port: int, database_url: str):
     db = MongoClient(database_url).brainz
 
     app = Flask(__name__)
+    CORS(app)
 
     api = Api(app)
     api.add_resource(Users, '/users', resource_class_args=(db,))

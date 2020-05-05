@@ -3,8 +3,11 @@ __pycache__
 *.pyc
 *.pyo
 *.pyd
+*.MD
 .Python
 .env
 .idea
 docs
 tests
+**/node_modules
+**/build
