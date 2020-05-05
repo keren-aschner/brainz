@@ -9,15 +9,19 @@ from brainz.protocol.fields import *
 from brainz.protocol.parsers_saver import deserialize
 from brainz.protocol.server_parsers import serialize
 
-RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / 'resources' / 'parsers' / 'parsers'
-_USER = {USER_ID: 1, USERNAME: 'Keren Solodkin', BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
-         GENDER: 'f'}
+RESOURCES = pathlib.Path(__file__).absolute().parent.parent.parent / "resources" / "parsers" / "parsers"
+_USER = {
+    USER_ID: 1,
+    USERNAME: "Keren Solodkin",
+    BIRTHDAY: datetime(1997, 2, 25, tzinfo=timezone.utc).timestamp(),
+    GENDER: "f",
+}
 _TIMESTAMP = datetime(2019, 10, 25, 15, 12, 5, 228000, tzinfo=timezone.utc)
 
-with open(RESOURCES / 'depth_image.json', 'rb+') as f:
+with open(RESOURCES / "depth_image.json", "rb+") as f:
     image = json.load(f)
 _SNAPSHOT = {TIMESTAMP: _TIMESTAMP.timestamp() * 1000, DEPTH_IMAGE: dict(height=172, width=224, data=image)}
-with open(RESOURCES / 'depth_image.jpg', 'rb') as f:
+with open(RESOURCES / "depth_image.jpg", "rb") as f:
     _DATA = f.read()
 
 
@@ -31,11 +35,11 @@ def test_parser():
 
     assert result[USER] == _USER
     assert result[TIMESTAMP] == _TIMESTAMP.timestamp()
-    assert result[DATA]['path'] == str(depth_image_path.absolute())
+    assert result[DATA]["path"] == str(depth_image_path.absolute())
     assert depth_image_path.read_bytes() == _DATA
 
     os.remove(depth_image_path)
 
 
 def _get_path(data_dir, user, timestamp):
-    return data_dir / str(user[USER_ID]) / f'{timestamp:%Y-%m-%d_%H-%M-%S-%f}/depth_image.jpg'
+    return data_dir / str(user[USER_ID]) / f"{timestamp:%Y-%m-%d_%H-%M-%S-%f}/depth_image.jpg"

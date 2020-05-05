@@ -18,10 +18,10 @@ def get_app(api_host: str, api_port: int):
     """
     Get the gui-server's flask app.
     """
-    app = Flask(__name__, static_folder='build/static', template_folder='build')
+    app = Flask(__name__, static_folder="build/static", template_folder="build")
 
-    @app.route('/')
+    @app.route("/")
     def index():
-        return render_template('index.html', api_server=f'http://{api_host}:{api_port}')
+        return render_template("index.html", api_server=f"http://{api_host}:{api_port}")
 
     return app

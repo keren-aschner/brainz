@@ -9,12 +9,12 @@ from ..protocol.server_parsers import deserialize
 
 
 class Context:
-    BASE_DIR = Path('/opt/brainz/data/')
+    BASE_DIR = Path("/opt/brainz/data/")
 
     def __init__(self, message: bytes):
         self.user, self.snapshot = self.deserialize(message)
         self.timestamp = int(self.snapshot[TIMESTAMP]) / 1000
-        self.timestamp_str = f'{datetime.utcfromtimestamp(self.timestamp):%Y-%m-%d_%H-%M-%S-%f}'
+        self.timestamp_str = f"{datetime.utcfromtimestamp(self.timestamp):%Y-%m-%d_%H-%M-%S-%f}"
 
     def serialize(self, data) -> bytes:
         """

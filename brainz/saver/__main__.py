@@ -14,11 +14,15 @@ def cli():
     pass
 
 
-@cli.command('save')
-@click.option('-d', '--database', default='mongodb://mongodb:27017/',
-              help='URL to the database to use. Default is mongodb://mongodb:27017/.')
-@click.argument('topic')
-@click.argument('data_path', type=click.File('rb'))
+@cli.command("save")
+@click.option(
+    "-d",
+    "--database",
+    default="mongodb://mongodb:27017/",
+    help="URL to the database to use. Default is mongodb://mongodb:27017/.",
+)
+@click.argument("topic")
+@click.argument("data_path", type=click.File("rb"))
 def save(database, topic, data):
     """
     Save data from DATA_PATH to TOPIC in the given db.
@@ -27,9 +31,9 @@ def save(database, topic, data):
     saver.save(topic, data.read())
 
 
-@cli.command('run-saver')
-@click.argument('database_url')
-@click.argument('message_queue_url')
+@cli.command("run-saver")
+@click.argument("database_url")
+@click.argument("message_queue_url")
 def run_saver(database_url, message_queue_url):
     """
     Save data from MESSAGE_QUEUE_URL to DATABASE_URL.
@@ -45,10 +49,10 @@ def consume(mq_url: str, db_url: str) -> None:
     :param db_url: The db for saving the consumed data.
     """
     mq_url = furl(mq_url)
-    if mq_url.scheme == 'rabbitmq':
+    if mq_url.scheme == "rabbitmq":
         consume_rmq(mq_url.host, mq_url.port, db_url)
     else:
-        raise NotImplementedError(f'Not supported scheme {mq_url.scheme}')
+        raise NotImplementedError(f"Not supported scheme {mq_url.scheme}")
 
 
 def consume_rmq(host: str, port: int, db_url: str):
@@ -64,11 +68,11 @@ def consume_rmq(host: str, port: int, db_url: str):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port))
     channel = connection.channel()
 
-    channel.exchange_declare(exchange='parsers_data', exchange_type='topic')
-    queue_name = channel.queue_declare('', exclusive=True).method.queue
+    channel.exchange_declare(exchange="parsers_data", exchange_type="topic")
+    queue_name = channel.queue_declare("", exclusive=True).method.queue
 
     for parser in get_parsers():
-        channel.queue_bind(exchange='parsers_data', queue=queue_name, routing_key=parser.name) # TODO: routing key # ?
+        channel.queue_bind(exchange="parsers_data", queue=queue_name, routing_key=parser.name)  # TODO: routing key # ?
 
     def callback(ch: Channel, method: Basic.Deliver, properties: BasicProperties, message: bytes) -> None:
         saver.save(method.routing_key, message)
@@ -77,5 +81,5 @@ def consume_rmq(host: str, port: int, db_url: str):
     channel.start_consuming()
 
 
-if __name__ == '__main__':
-    cli(prog_name='brainz.saver')
+if __name__ == "__main__":
+    cli(prog_name="brainz.saver")

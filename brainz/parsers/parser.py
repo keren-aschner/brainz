@@ -20,7 +20,7 @@ def get_name(parser: Union[Callable[[], BaseParser], Callable[[bytes], bytes]]) 
     """
     name = parser.__name__
     if inspect.isclass(parser):
-        return re.sub(r'(?<!^)(?=[A-Z])', '_', re.search("(.*)Parser", name).group(1)).lower()
+        return re.sub(r"(?<!^)(?=[A-Z])", "_", re.search("(.*)Parser", name).group(1)).lower()
     else:
         return re.search("parse_(.*)", name).group(1)
 

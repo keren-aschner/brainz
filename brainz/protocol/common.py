@@ -13,11 +13,11 @@ def serialize_bin_data(directory: str, user: dict, snapshot: dict) -> dict:
     :param snapshot: The snapshot to serialize.
     :return: The serialized message.
     """
-    path = Path('/opt/brainz') / directory / str(user[USER_ID]) / str(snapshot[TIMESTAMP])
+    path = Path("/opt/brainz") / directory / str(user[USER_ID]) / str(snapshot[TIMESTAMP])
     os.makedirs(path, exist_ok=True)
     if COLOR_IMAGE in snapshot:
-        path = path / f'{COLOR_IMAGE}_data.bin'
-        with open(path, 'wb') as f:
+        path = path / f"{COLOR_IMAGE}_data.bin"
+        with open(path, "wb") as f:
             f.write(snapshot[COLOR_IMAGE][DATA])
         snapshot[COLOR_IMAGE][DATA] = str(path.absolute())
     return snapshot
@@ -31,6 +31,6 @@ def deserialize_bin_data(snapshot: dict) -> dict:
     :return: The snapshot with the binary fields.
     """
     if COLOR_IMAGE in snapshot:
-        with open(snapshot[COLOR_IMAGE][DATA], 'rb') as f:
+        with open(snapshot[COLOR_IMAGE][DATA], "rb") as f:
             snapshot[COLOR_IMAGE][DATA] = f.read()
     return snapshot

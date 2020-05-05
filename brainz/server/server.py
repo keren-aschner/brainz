@@ -8,9 +8,9 @@ from ..parsers import get_all_fields
 from ..protocol.client_server import deserialize
 from ..protocol.server_parsers import serialize
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                    datefmt='%d-%m-%y %H:%M:%S')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s", datefmt="%d-%m-%y %H:%M:%S"
+)
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +36,8 @@ class Config(Resource):
         self.fields = parsers_fields
 
     def get(self) -> Dict[str, List[str]]:
-        logger.info('Sending config specification')
-        return {'config': self.fields}
+        logger.info("Sending config specification")
+        return {"config": self.fields}
 
 
 class Snapshot(Resource):
@@ -52,7 +52,7 @@ class Snapshot(Resource):
         client_server_serialized = request.get_data()
         server_parsers_serialized = serialize(*deserialize(client_server_serialized))
         self.publish(server_parsers_serialized)
-        logger.info('Published message')
+        logger.info("Published message")
         return {}, 200
 
 
@@ -62,6 +62,6 @@ def get_app(publish: Callable[[bytes], None]) -> Flask:
     """
     app = Flask(__name__)
     api = Api(app)
-    api.add_resource(Config, '/config', resource_class_args=(get_all_fields(),))
-    api.add_resource(Snapshot, '/snapshot', resource_class_args=(publish,))
+    api.add_resource(Config, "/config", resource_class_args=(get_all_fields(),))
+    api.add_resource(Snapshot, "/snapshot", resource_class_args=(publish,))
     return app

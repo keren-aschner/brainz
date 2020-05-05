@@ -7,7 +7,7 @@ from .base_parser import BaseParser
 from .parser import Parser
 from ..protocol.fields import TIMESTAMP
 
-version = '0.1.0'
+version = "0.1.0"
 
 
 def parse(parser_name: str, data: bytes) -> bytes:
@@ -33,11 +33,11 @@ def get_parsers() -> List[Parser]:
     Get all the parsers from brainz.parser package
     """
     parsers = []
-    root = Path('brainz/parsers/parsers').absolute()
+    root = Path("brainz/parsers/parsers").absolute()
     for path in root.iterdir():
-        if path.name.startswith('_') or not path.suffix == '.py':
+        if path.name.startswith("_") or not path.suffix == ".py":
             continue
-        module = importlib.import_module(f'.{path.stem}', package='brainz.parsers.parsers')
+        module = importlib.import_module(f".{path.stem}", package="brainz.parsers.parsers")
         parsers.extend([Parser(parser) for _, parser in inspect.getmembers(module, is_parser)])
 
     return parsers
@@ -57,7 +57,7 @@ def is_parser(obj: Any) -> bool:
     :return: True if it is a parser, False otherwise.
     """
     if inspect.isclass(obj):
-        return obj.__name__.endswith('Parser') and hasattr(obj, 'parse') and hasattr(obj, 'fields')
+        return obj.__name__.endswith("Parser") and hasattr(obj, "parse") and hasattr(obj, "fields")
     if inspect.isfunction(obj):
-        return obj.__name__.startswith('parse') and hasattr(obj, 'fields')
+        return obj.__name__.startswith("parse") and hasattr(obj, "fields")
     return False

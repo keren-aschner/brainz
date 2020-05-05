@@ -51,5 +51,5 @@ class ProtobufParser(SampleParser):
         """
         Get size to read from the first 4 bytes, and then read `size` bytes.
         """
-        size = struct.unpack('I', stream.read(4))[0]
+        size = struct.unpack("I", stream.read(4))[0]
         return stream.read(size)

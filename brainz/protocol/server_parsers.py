@@ -14,7 +14,7 @@ def serialize(user: dict, snapshot: dict) -> bytes:
     :param snapshot: The snapshot to serialize.
     :return: The serialized message.
     """
-    snapshot = serialize_bin_data('server_parsers', user, snapshot)
+    snapshot = serialize_bin_data("server_parsers", user, snapshot)
     return json.dumps({USER: user, SNAPSHOT: snapshot})
 
 

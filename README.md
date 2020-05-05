@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/kerenso/brainz.svg?branch=master)](https://travis-ci.org/kerenso/brainz)
 [![Documentation Status](https://readthedocs.org/projects/brainz/badge/?version=latest)](https://brainz.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/kerenso/brainz/branch/master/graph/badge.svg)](https://codecov.io/gh/kerenso/brainz)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # Brainz
 Project for Advanced System Design Course at Tel Aviv University.

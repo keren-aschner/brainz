@@ -13,10 +13,10 @@ def cli():
     pass
 
 
-@cli.command('run-server')
-@click.option('-h', '--host', default='0.0.0.0', help='The host to listen on. Default is 0.0.0.0.')
-@click.option('-p', '--port', default=8000, help='The port to listen on. Default is 8000.')
-@click.argument('message_queue_url')
+@cli.command("run-server")
+@click.option("-h", "--host", default="0.0.0.0", help="The host to listen on. Default is 0.0.0.0.")
+@click.option("-p", "--port", default=8000, help="The port to listen on. Default is 8000.")
+@click.argument("message_queue_url")
 def run(host, port, message_queue_url):
     """
     Listen on `host`:`port` and pass received messages to MESSAGE_QUEUE_URL.
@@ -32,10 +32,10 @@ def publish_to_url(url: str) -> Callable[[bytes], None]:
     :return: The required publish method.
     """
     url = furl(url)
-    if url.scheme == 'rabbitmq':
+    if url.scheme == "rabbitmq":
         return publish_to_rmq(url.host, url.port)
     else:
-        raise NotImplementedError(f'Not supported scheme {url.scheme}')
+        raise NotImplementedError(f"Not supported scheme {url.scheme}")
 
 
 def publish_to_rmq(host: str, port: int) -> Callable[[bytes], None]:
@@ -55,12 +55,12 @@ def publish_to_rmq(host: str, port: int) -> Callable[[bytes], None]:
         """
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port))
         channel = connection.channel()
-        channel.exchange_declare(exchange='snapshots', exchange_type='fanout')
-        channel.basic_publish(exchange='snapshots', routing_key='', body=message)
+        channel.exchange_declare(exchange="snapshots", exchange_type="fanout")
+        channel.basic_publish(exchange="snapshots", routing_key="", body=message)
         connection.close()
 
     return publish
 
 
-if __name__ == '__main__':
-    cli(prog_name='brainz.server')
+if __name__ == "__main__":
+    cli(prog_name="brainz.server")

@@ -10,14 +10,14 @@ from pymongo.database import Database
 
 from ..protocol.fields import USER_ID, USERNAME, TIMESTAMP, COLOR_IMAGE, DEPTH_IMAGE, FEELINGS
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
-                    datefmt='%d-%m-%y %H:%M:%S')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s", datefmt="%d-%m-%y %H:%M:%S"
+)
 
 logger = logging.getLogger(__name__)
 
-ID = '_id'
-SNAPSHOT_ID = 'snapshot_id'
+ID = "_id"
+SNAPSHOT_ID = "snapshot_id"
 
 
 class ApiResource(Resource):
@@ -47,18 +47,21 @@ class Snapshots(ApiResource):
         """
          Return the snapshot ids and timestamps for a specific user.
         """
-        return [{SNAPSHOT_ID: str(snapshot[ID]), TIMESTAMP: snapshot[TIMESTAMP]} for snapshot in
-                self.snapshots.find({USER_ID: user_id}).sort(TIMESTAMP, ASCENDING)]
+        return [
+            {SNAPSHOT_ID: str(snapshot[ID]), TIMESTAMP: snapshot[TIMESTAMP]}
+            for snapshot in self.snapshots.find({USER_ID: user_id}).sort(TIMESTAMP, ASCENDING)
+        ]
 
 
 class Feelings(ApiResource):
-
     def get(self, user_id):
         """
         Return the user's feelings over time.
         """
-        return [{SNAPSHOT_ID: str(snapshot[ID]), TIMESTAMP: snapshot[TIMESTAMP], FEELINGS: snapshot[FEELINGS]} for
-                snapshot in self.snapshots.find({USER_ID: user_id})]
+        return [
+            {SNAPSHOT_ID: str(snapshot[ID]), TIMESTAMP: snapshot[TIMESTAMP], FEELINGS: snapshot[FEELINGS]}
+            for snapshot in self.snapshots.find({USER_ID: user_id})
+        ]
 
 
 class Snapshot(ApiResource):
@@ -68,7 +71,7 @@ class Snapshot(ApiResource):
         """
         snapshot = self.snapshots.find_one({USER_ID: user_id, ID: ObjectId(snapshot_id)}, {USER_ID: 0, ID: 0})
         timestamp = snapshot.pop(TIMESTAMP)
-        return {SNAPSHOT_ID: snapshot_id, TIMESTAMP: timestamp, 'fields': list(snapshot.keys())}
+        return {SNAPSHOT_ID: snapshot_id, TIMESTAMP: timestamp, "fields": list(snapshot.keys())}
 
 
 class Result(ApiResource):
@@ -81,7 +84,7 @@ class Result(ApiResource):
 
 
 class ResultData(ApiResource):
-    representations = {'image/jpeg': lambda data, code, headers: send_file(io.BytesIO(data), mimetype='image/jpeg')}
+    representations = {"image/jpeg": lambda data, code, headers: send_file(io.BytesIO(data), mimetype="image/jpeg")}
 
     def get(self, user_id, snapshot_id, result_name):
         """
@@ -91,5 +94,5 @@ class ResultData(ApiResource):
             abort(404)
 
         snapshot = self.snapshots.find_one({USER_ID: user_id, ID: ObjectId(snapshot_id)})
-        with open(snapshot[result_name]['path'], 'rb') as f:
+        with open(snapshot[result_name]["path"], "rb") as f:
             return f.read()
