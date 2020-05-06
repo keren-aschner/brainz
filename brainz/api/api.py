@@ -5,6 +5,7 @@ from flask_cors import CORS
 from flask_restful import Api
 from furl import furl
 from pymongo import MongoClient
+from pymongo.database import Database
 
 from .resources import Users, User, Snapshots, Feelings, Snapshot, Result, ResultData
 
@@ -28,7 +29,11 @@ def run_api_server(host: str, port: int, database_url: str):
         raise NotImplementedError(f"Not supported scheme {url.scheme}.")
 
     db = MongoClient(database_url).brainz
+    app = get_app(db)
+    app.run(host=host, port=port)
 
+
+def get_app(db: Database):
     app = Flask(__name__)
     CORS(app)
 
@@ -47,4 +52,4 @@ def run_api_server(host: str, port: int, database_url: str):
         resource_class_args=(db,),
     )
 
-    app.run(host=host, port=port)
+    return app
