@@ -1,0 +1,14 @@
+from ..context import Context
+from ...protocol.fields import *
+
+
+def parse_{parser_name}(message: bytes) -> bytes:
+    """
+    TODO: add doc
+    """
+    context = Context(message)
+    # TODO add your code here
+    return context.serialize({{}})
+
+
+parse_{parser_name}.fields = []  # TODO: add required fields

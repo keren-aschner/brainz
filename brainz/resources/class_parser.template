@@ -1,0 +1,20 @@
+from ..base_parser import BaseParser
+from ..context import Context
+from ...protocol.fields import *
+
+
+class {parser_name}Parser(BaseParser):
+    def __init__(self):
+        """
+        Initialize the parser with the required fields.
+        """
+        super().__init__()  # TODO: add required fields
+
+    def parse(self, message: bytes) -> bytes:
+        """
+        TODO: add doc
+        """
+        context = Context(message)
+        # TODO add your code here
+        return context.serialize({{}})
+

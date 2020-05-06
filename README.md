@@ -4,7 +4,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # Brainz
-Project for Advanced System Design Course at Tel Aviv University.
+Project for [Advanced System Design](https://advanced-system-design.com/) Course at Tel Aviv University.
 See [full documentation](https://brainz.readthedocs.io/en/latest/).
 
 ## Installation
@@ -96,10 +96,18 @@ The implemented parsers are:
  - `Feelings` - Collects the feelings the user was experiencing at any timestamp, and publishes the result to a
  dedicated topic.
 
-####How To Add A New Parser
-TODO
-what would I need to do to be able to have the parse command invoke my own code, and the run-parser command to run it as a service working with a message queue.
+#### How To Add A New Parser
+To add a new parser, use the `add_parser.py` script from the `scripts` directory.
+```
+Usage: python scripts/add_parser.py [OPTIONS] PARSER_NAME
 
+  Add a parser named PARSER_NAME. Add class if class-parser flag is on,
+  otherwise add method.
+
+Options:
+  -c, --class-parser  Add class parser.
+  --help              Show this message and exit.
+```
 ### The Saver
 The saver is available as `brainz.saver` and exposes the following API:
 ```python
