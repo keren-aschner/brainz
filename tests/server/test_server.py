@@ -8,6 +8,7 @@ import pytest
 from bson.json_util import dumps
 
 from brainz.protocol.fields import *
+from brainz.server.__main__ import publish_to_url
 from brainz.server.server import get_app
 
 RESOURCES = pathlib.Path(__file__).absolute().parent.parent / "resources" / "server"
@@ -58,3 +59,8 @@ def test_snapshot(client):
     assert response.status_code == 200
     f = data_dir / "file"
     assert f.read_text() == json.dumps({USER: _USER, SNAPSHOT: _SNAPSHOT})
+
+
+def test_url_exception():
+    with pytest.raises(NotImplementedError):
+        publish_to_url("notrmq://127.0.0.1:1234")
