@@ -28,7 +28,7 @@ def parse_data(parser, snapshot):
     """
     Call PARSER with the data from SNAPSHOT and print the result.
     """
-    print(parse(parser, snapshot.read()))
+    click.echo(parse(parser, snapshot.read()))
 
 
 @cli.command("run-parser")

@@ -8,7 +8,7 @@ class BaseParser:
          The subclasses of Parser should call this method with their required fields.
         """
         if fields is not None:
-            self.fields = fields
+            self.fields = list(fields)
         else:
             raise ValueError("No fields supplied to parser.")
 

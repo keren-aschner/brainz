@@ -5,7 +5,7 @@ from .common import serialize_bin_data, deserialize_bin_data
 from .fields import USER, SNAPSHOT
 
 
-def serialize(user: dict, snapshot: dict) -> bytes:
+def serialize(user: dict, snapshot: dict) -> str:
     """
     Serialize the given user and snapshot in the server-parsers protocol.
     Save the binary fields in a file in /opt/brainz/server_parsers.
@@ -18,7 +18,7 @@ def serialize(user: dict, snapshot: dict) -> bytes:
     return json.dumps({USER: user, SNAPSHOT: snapshot})
 
 
-def deserialize(message: bytes) -> Tuple[dict, dict]:
+def deserialize(message: str) -> Tuple[dict, dict]:
     """
     Deserialize the given message in the server-parsers protocol.
     Load the binary fields from /opt/brainz/server_parsers.

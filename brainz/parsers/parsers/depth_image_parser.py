@@ -5,7 +5,7 @@ from ..context import Context
 from ...protocol.fields import DEPTH_IMAGE, HEIGHT, WIDTH, DATA
 
 
-def parse_depth_image(message: bytes) -> bytes:
+def parse_depth_image(message: str) -> str:
     """
      Save the depth image data as a jpg image.
     """

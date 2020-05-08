@@ -10,7 +10,7 @@ from ..protocol.fields import TIMESTAMP
 version = "0.1.0"
 
 
-def parse(parser_name: str, data: bytes) -> bytes:
+def parse(parser_name: str, data: bytes) -> str:
     """
     Parse the data using the correct parser.
 

@@ -2,7 +2,7 @@ from ..context import Context
 from ...protocol.fields import POSE
 
 
-def parse_pose(message: bytes) -> bytes:
+def parse_pose(message: str) -> str:
     """
     Extract the pose from each snapshot.
     """

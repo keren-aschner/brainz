@@ -25,7 +25,7 @@ def get_name(parser: Union[Callable[[], BaseParser], Callable[[bytes], bytes]]) 
         return re.search("parse_(.*)", name).group(1)
 
 
-def get_fields(parser: Union[Callable[[], BaseParser], Callable[[bytes], bytes]]) -> List[str]:
+def get_fields(parser: Union[Callable[[], BaseParser], Callable[[str], str]]) -> List[str]:
     """
     Get the parser's required fields.
     """

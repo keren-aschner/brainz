@@ -2,7 +2,7 @@ from ..context import Context
 from ...protocol.fields import FEELINGS
 
 
-def parse_feelings(message: bytes) -> bytes:
+def parse_feelings(message: str) -> str:
     """
     Extract the feelings from each snapshot.
     """

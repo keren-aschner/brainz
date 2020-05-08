@@ -4,7 +4,7 @@ from ..context import Context
 from ...protocol.fields import COLOR_IMAGE, DATA, HEIGHT, WIDTH
 
 
-def parse_color_image(message: bytes) -> bytes:
+def parse_color_image(message: str) -> str:
     """
     Extract the RGB color image from each snapshot and save it as a jpg image.
     """

@@ -11,12 +11,12 @@ from ..protocol.server_parsers import deserialize
 class Context:
     BASE_DIR = Path("/opt/brainz/data/")
 
-    def __init__(self, message: bytes):
+    def __init__(self, message: str):
         self.user, self.snapshot = self.deserialize(message)
         self.timestamp = int(self.snapshot[TIMESTAMP]) / 1000
         self.timestamp_str = f"{datetime.utcfromtimestamp(self.timestamp):%Y-%m-%d_%H-%M-%S-%f}"
 
-    def serialize(self, data) -> bytes:
+    def serialize(self, data) -> str:
         """
         Serialize data using the parsers-saver protocol.
         """
@@ -31,7 +31,7 @@ class Context:
         return dir_path / filename
 
     @classmethod
-    def deserialize(cls, message: bytes) -> Tuple[dict, dict]:
+    def deserialize(cls, message: str) -> Tuple[dict, dict]:
         """
         Deserialize using the server-parsers protocol.
         """
