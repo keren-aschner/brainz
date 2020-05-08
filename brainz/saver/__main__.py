@@ -23,12 +23,12 @@ def cli():
 )
 @click.argument("topic")
 @click.argument("data_path", type=click.File("rb"))
-def save(database, topic, data):
+def save(database, topic, data_path):
     """
     Save data from DATA_PATH to TOPIC in the given db.
     """
     saver = Saver(database)
-    saver.save(topic, data.read())
+    saver.save(topic, data_path.read())
 
 
 @cli.command("run-saver")

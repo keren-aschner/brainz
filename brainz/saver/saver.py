@@ -21,7 +21,7 @@ class Saver:
 
         self.db = MongoClient(database_url).brainz
 
-    def save(self, topic: str, data: bytes) -> None:
+    def save(self, topic: str, data: str) -> None:
         """
         Save the data in the relevant collection in the db.
 
