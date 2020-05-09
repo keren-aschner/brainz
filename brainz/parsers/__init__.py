@@ -7,7 +7,7 @@ from .base_parser import BaseParser
 from .parser import Parser
 from ..protocol.fields import TIMESTAMP
 
-version = "0.1.0"
+version = "1.0.0"
 
 
 def parse(parser_name: str, data: bytes) -> str:
