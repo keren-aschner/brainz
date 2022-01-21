@@ -20,7 +20,7 @@ Flask-RESTful==0.3.8
 furl==2.1.0
 idna==2.9
 imagesize==1.2.0
-ipython==7.14.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 itsdangerous==1.1.0
 jedi==0.17.0
